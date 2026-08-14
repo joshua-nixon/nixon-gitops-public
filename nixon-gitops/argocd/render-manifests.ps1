@@ -2,6 +2,12 @@ Set-StrictMode -Version Latest
 
 $ErrorActionPreference = 'Stop'
 
+if (-not (Get-Module -ListAvailable -Name powershell-yaml | Select-Object -First 1)) {
+    Install-Module powershell-yaml -Scope CurrentUser -Force -ErrorAction Stop
+}
+
+Import-Module powershell-yaml -ErrorAction Stop
+
 $repoRoot               = Split-Path $PSScriptRoot -Parent
 $manifestsRoot          = Join-Path $repoRoot 'argocd'
 $appSetsRenderedRoot    = Join-Path $manifestsRoot 'appsets'
@@ -13,6 +19,10 @@ $appsetTemplate         = Get-Content -LiteralPath $appsetTemplatePath -Raw
 
 function To-Crlf ($text) {
     return ($text -replace "`r?`n", "`r`n")
+}
+
+function Has-Property([object] $object, [string] $name) {
+    return (([PSCustomObject]$object).PSObject.Properties.Name -contains $name)
 }
 
 function Render-ArrayValue([object[]]$arrayValue) {
@@ -35,6 +45,54 @@ function To-RepoAbsolutePath([string]$path) {
     return '/' + (Normalize-RepoPath $path)
 }
 
+function Get-RepoRelativePath([string]$path) {
+    $resolvedPath = [System.IO.Path]::GetFullPath($path)
+    $repoRootPath = [System.IO.Path]::GetFullPath($repoRoot)
+    $relativePath = [System.IO.Path]::GetRelativePath($repoRootPath, $resolvedPath)
+
+    return ($relativePath -replace '\\', '/')
+}
+
+function Add-LocalChartDependencyPaths([string]$chartPath, [System.Collections.Generic.List[string]]$manifestPaths) {
+    $resolvedChartPath = [System.IO.Path]::GetFullPath((Join-Path $repoRoot (Normalize-RepoPath $chartPath)))
+
+    if (-not (Test-Path -LiteralPath $resolvedChartPath)) {
+        return
+    }
+
+    $chartFilePath = Join-Path $resolvedChartPath 'Chart.yaml'
+
+    if (-not (Test-Path -LiteralPath $chartFilePath)) {
+        return
+    }
+
+    $chart = Get-Content -LiteralPath $chartFilePath -Raw | ConvertFrom-Yaml
+
+    if (-not (Has-Property -Object $chart -Name 'dependencies')) {
+        return
+    }
+
+    foreach ($dependency in @($chart.dependencies)) {
+        if ($null -eq $dependency.repository) {
+            continue
+        }
+
+        $repository = [string]$dependency.repository
+
+        if (-not $repository.StartsWith('file://')) {
+            continue
+        }
+
+        $dependencyPath         = $repository.Substring(7)
+        $resolvedDependencyPath = [System.IO.Path]::GetFullPath((Join-Path $resolvedChartPath $dependencyPath))
+        $relativeDependencyPath = Get-RepoRelativePath -path $resolvedDependencyPath
+
+        $manifestPaths.Add((To-RepoAbsolutePath $relativeDependencyPath))
+
+        Add-LocalChartDependencyPaths -chartPath $relativeDependencyPath -manifestPaths $manifestPaths
+    }
+}
+
 function Get-ManifestGeneratePaths([hashtable]$item) {
     $manifestPaths = New-Object System.Collections.Generic.List[string]
 
@@ -47,6 +105,7 @@ function Get-ManifestGeneratePaths([hashtable]$item) {
             foreach ($component in @($appset.components)) {
                 if ($component.chart) {
                     $manifestPaths.Add((To-RepoAbsolutePath $component.chart))
+                    Add-LocalChartDependencyPaths -chartPath $component.chart -manifestPaths $manifestPaths
                 }
             }
         }

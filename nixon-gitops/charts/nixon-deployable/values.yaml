@@ -1,6 +1,3 @@
-ingress:
-  enabled: false
-
 replicaCount: 1
 
 extraEnvValues: []
@@ -50,4 +47,7 @@ hpa:
   enabled: false
 
 readinessProbe:
+  enabled: false
+
+ingress:
   enabled: false

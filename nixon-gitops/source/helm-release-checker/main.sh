@@ -127,14 +127,12 @@ send_summary_alert() {
 
     local updates_formatted=$(printf "%s\n" "${UPDATES_LIST[@]}")
     local future_epoch=$(( $(date +%s) + 86400 ))
-    local ends_at=$(date -u -d "@${future_epoch}" +"%Y-%m-%dT%H:%M:%SZ")
 
     log_message "INFO" "Sending alert for $update_count pending update(s)"
 
     jq -n \
       --arg count "$update_count" \
       --arg list "$updates_formatted" \
-      --arg ends_at "$ends_at" \
       '[
         {
           "labels": {
@@ -144,8 +142,7 @@ send_summary_alert() {
           "annotations": {
             "summary": ($count + " Helm chart update(s) available"),
             "description": ("The following releases have newer chart versions available:\n\n" + $list)
-          },
-          "endsAt": $ends_at
+          }
         }
       ]' | curl -s -XPOST "$ALERTMANAGER_URL" \
             -H 'Content-Type: application/json' \

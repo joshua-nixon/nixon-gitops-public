@@ -1,6 +1,6 @@
 nameOverride: untitledproject-api-monolith
 
-image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.monolith:develop-20260803-183201-4f64d244"
+image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.monolith:develop-20260813-194801-064983af"
 
 dotNetEnvironment: DevTest
 
@@ -19,3 +19,6 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+
+hpa:
+  enabled: true

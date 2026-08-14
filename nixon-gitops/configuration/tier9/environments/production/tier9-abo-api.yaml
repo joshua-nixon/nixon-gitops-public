@@ -2,7 +2,7 @@ nameOverride: tier9-abo-api
 
 dotNetEnvironment: Production
 
-image: "sharedpersonalcontaineregistry.azurecr.io/abo.api:master-20260804-205957-1fbe5f9f"
+image: "sharedpersonalcontaineregistry.azurecr.io/abo.api:master-20260809-175852-415ba32e"
 
 resources:
   requests:

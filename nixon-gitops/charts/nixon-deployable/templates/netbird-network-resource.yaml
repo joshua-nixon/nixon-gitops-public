@@ -1,0 +1,8 @@
+{{- if .Values.service.enabled }}
+{{ include "nixon-library.networkResource" (dict 
+  "name" (include "nixon-deployable.name" $) 
+  "namespace" $.Release.Namespace
+  "router" $.Values.netbirdNetworkRoute
+  "labels" (include "nixon-deployable.labels" $)
+) }}
+{{- end }}

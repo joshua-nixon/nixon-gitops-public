@@ -1,6 +1,6 @@
 nameOverride: untitledproject-api-auth
 
-image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:develop-20260803-183205-4f64d244"
+image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:develop-20260813-194804-064983af"
 
 dotNetEnvironment: DevTest
 

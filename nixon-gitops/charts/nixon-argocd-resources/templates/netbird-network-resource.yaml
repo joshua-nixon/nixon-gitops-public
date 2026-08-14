@@ -1,15 +1,6 @@
-apiVersion: netbird.io/v1alpha1
-kind: NetworkResource
-metadata:
-  name: argocd-server
-  namespace: {{ .Release.Namespace }}
-  labels:
-{{ include "nixon-argocd-resources.labels" . | indent 4 }}
-spec:
-  networkRouterRef:
-    name: {{ .Values.netbirdResource.networkRouter }}
-    namespace: {{ .Values.netbirdResource.namespace }}
-  serviceRef:
-    name: argocd-server
-  groups:
-    - name: All
+{{ include "nixon-library.networkResource" (dict 
+  "name" "argocd-server"
+  "namespace" $.Release.Namespace
+  "router" $.Values.netbirdNetworkRoute
+  "labels" (include "nixon-argocd-resources.labels" $)
+) }}

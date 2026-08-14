@@ -1,0 +1,38 @@
+
+{{/*
+  name        : string / required
+  labels      : string / required
+  namespace   : string / required
+  router      : object / required
+  {
+    name      : string / required
+    namespace : string / required
+  }
+*/}}
+{{- define "nixon-library.networkResource" -}}
+
+{{- $name       := required ".name is required" .name -}}
+{{- $labels     := required ".labels is required" .labels -}}
+{{- $namespace  := required ".namespace is required" .namespace -}}
+
+{{- $router           := required ".router is required" .router -}}
+{{- $routerName       := required ".router.name is required" $router.name -}}
+{{- $routerNamespace  := required ".router.namespace is required" $router.namespace -}}
+
+apiVersion: netbird.io/v1alpha1
+kind: NetworkResource
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+{{- $labels | nindent 4 }}
+spec:
+  networkRouterRef:
+    name: {{ $router.name | quote }}
+    namespace: {{ $router.namespace | quote }}
+  serviceRef:
+    name: {{ $name | quote }}
+  groups:
+    - name: All
+    
+{{- end -}}

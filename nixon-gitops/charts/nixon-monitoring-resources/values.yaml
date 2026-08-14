@@ -1,0 +1,2 @@
+netbirdNetworkResources:
+  - name: kube-prometheus-stack-alertmanager

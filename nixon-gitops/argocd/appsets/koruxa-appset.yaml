@@ -23,7 +23,7 @@ spec:
     metadata:
       name: "{{ .name }}-{{ .environment }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/argocd/workloads/koruxa-*.yaml;/configuration/base/values.yaml;/configuration/koruxa/environments/{{ .environment }}/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/argocd/workloads/koruxa-*.yaml;/configuration/base/values.yaml;/configuration/koruxa/environments/{{ .environment }}/{{ .name }}.yaml"
     spec:
       project: default
       source:

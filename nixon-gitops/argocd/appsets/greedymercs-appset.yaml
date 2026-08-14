@@ -23,7 +23,7 @@ spec:
     metadata:
       name: "{{ .name }}-{{ .environment }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-cnpg-cluster;/argocd/workloads/greedymercs-*.yaml;/configuration/base/values.yaml;/configuration/greedymercs/values.yaml;/configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/greedymercs-*.yaml;/configuration/base/values.yaml;/configuration/greedymercs/values.yaml;/configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml"
     spec:
       project: default
       source:

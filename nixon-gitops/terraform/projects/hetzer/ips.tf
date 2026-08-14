@@ -3,7 +3,6 @@
   Fetch Cloudflare's IP ranges to allowlist them in firewall rules for HTTP/HTTPS traffic, 
   ensuring that legitimate traffic from Cloudflare's network is not blocked.
   Our IP is also added to the allowlist.
-  Podman seems to not like IPv6
 */
 
 data "http" "machine_ipv4" {
@@ -23,7 +22,7 @@ data "http" "cloudflare_ipv6" {
 }
 
 locals {
-  machine_ips = concat(
+  local_ips = concat(
     compact(split("\n", data.http.machine_ipv4.response_body)),
     compact(split("\n", data.http.machine_ipv6.response_body))
   )

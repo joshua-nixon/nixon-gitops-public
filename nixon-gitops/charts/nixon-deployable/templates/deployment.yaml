@@ -7,6 +7,7 @@ metadata:
 {{- include "nixon-deployable.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  minReadySeconds: 10
   selector:
     matchLabels:
 {{- include "nixon-deployable.selectorLabels" . | nindent 6 }}
@@ -19,12 +20,10 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imagePullSecret }}
 {{- end }}
-
 {{- if .Values.extraVolumes }}
       volumes:
 {{- tpl (toYaml .Values.extraVolumes) . | nindent 8 }}
 {{- end }}
-
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

@@ -2,7 +2,7 @@ nameOverride: tier9-abo-slime
 
 dotNetEnvironment: Production
 
-image: "sharedpersonalcontaineregistry.azurecr.io/abo.slime:master-20260804-205956-1fbe5f9f"
+image: "sharedpersonalcontaineregistry.azurecr.io/abo.slime:master-20260809-175850-415ba32e"
 
 resources:
   requests:
