@@ -7,6 +7,7 @@
   "settings": {
     "explorer.compactFolders": false,
     "editor.indentSize": 2,
+    "editor.tabSize": 2,
     "editor.formatOnSave": true,
     "files.exclude": {
       "**/.terraform": true,

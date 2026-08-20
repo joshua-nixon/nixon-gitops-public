@@ -4,12 +4,11 @@ nixon-gitops/ansible/inventory.ini
 nixon-gitops/helm/values
 
 nixon-gitops/charts/nixon-cluster-resources/values.yaml
+nixon-gitops/charts/nixon-ingress-resources
 nixon-gitops/charts/nixon-external-secrets-resources/values.yaml
 
 nixon-gitops/.gitattributes
-nixon-gitops/.devcontainer
 nixon-gitops/.gitignore
-nixon-gitops/.archived
 nixon-gitops/.git
 
 nixon-gitops/configuration/**/*-postgresql.yaml

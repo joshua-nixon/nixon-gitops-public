@@ -2,6 +2,16 @@ variable "display_name" {
   type = string
 }
 
+variable "redirect_url" {
+  type    = string
+  default = null
+}
+
+variable "group_membership_claims" {
+  type    = list(string)
+  default = null
+}
+
 variable "client_secrets" {
   type    = list(string)
   default = []
@@ -13,7 +23,7 @@ variable "federated_credentials" {
     issuer             = optional(string)
     kubernetes_namespace = optional(object({
       namespace       = string
-      issuer          = string
+      issuer          = optional(string)
       serviceaccounts = list(string)
     }))
     github = optional(object({
@@ -23,6 +33,11 @@ variable "federated_credentials" {
     }))
   }))
   default = []
+}
+
+variable "cluster_issuer" {
+  type    = string
+  default = null
 }
 
 variable "tags" {

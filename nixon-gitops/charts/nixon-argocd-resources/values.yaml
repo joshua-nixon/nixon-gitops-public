@@ -1,3 +1,7 @@
 repositorySecret:
   name: gitops-repository-credential
   vaultName: cluster-secretstore
+
+ingress:
+  host: argocd.joshuanixon.dev
+  service: argocd-server

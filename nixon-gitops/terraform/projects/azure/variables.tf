@@ -44,14 +44,16 @@ variable "azure_common_labels" {
 
 variable "azure_applications" {
   type = list(object({
-    name           = string
-    client_secrets = optional(list(string), [])
+    name                    = string
+    redirect_url            = optional(string)
+    group_membership_claims = optional(list(string))
+    client_secrets          = optional(list(string), [])
     federated_credentials = optional(list(object({
       subject_identifier = optional(string)
       issuer             = optional(string)
       kubernetes_namespace = optional(object({
         namespace       = string
-        issuer          = string
+        issuer          = optional(string)
         serviceaccounts = list(string)
       }))
 
@@ -72,4 +74,9 @@ variable "azure_groups" {
     mail_nickname = optional(string)
   }))
   default = {}
+}
+
+variable "cluster_issuer" {
+  type = string
+  default = null
 }

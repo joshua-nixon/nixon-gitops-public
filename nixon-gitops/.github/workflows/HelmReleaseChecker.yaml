@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   build:
-    uses: nixonjoshua98/shared-workflows/.github/workflows/Template.Build.Docker.ACR.yaml@master
+    uses: nixonjoshua98/shared-workflows/.github/workflows/Template.Build.Docker.ACR.yaml@v1.6
     with:
       azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
       azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}

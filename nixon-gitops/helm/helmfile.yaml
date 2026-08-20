@@ -64,6 +64,12 @@ releases:
       - argocd/argocd
       - external-secrets/nixon-external-secrets-resources
 
+  - name: nixon-ingress-resources
+    namespace: traefik
+    chart: ../charts/nixon-ingress-resources
+    needs:
+      - traefik/traefik
+
   - name: netbird-operator
     namespace: netbird
     chart: oci://ghcr.io/netbirdio/helm-charts/netbird-operator

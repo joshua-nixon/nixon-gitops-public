@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-public
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "nixon-argocd-resources.labels" . | nindent 4 }}
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /api/webhook
+            pathType: Exact
+            backend:
+              service:
+                name: {{ .Values.ingress.service }}
+                port:
+                  number: 80
+                  
+          - path: /auth/callback
+            pathType: Exact
+            backend:
+              service:
+                name: {{ .Values.ingress.service }}
+                port:
+                  number: 80

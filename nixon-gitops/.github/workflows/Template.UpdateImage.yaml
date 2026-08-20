@@ -15,10 +15,6 @@ on:
         required: false
         type: string
 
-      file_path:
-        required: false
-        type: string
-
       image:
         required: true
         type: string
@@ -37,7 +33,6 @@ jobs:
       PROJECT: ${{ inputs.project }}
       ENVIRONMENT: ${{ inputs.environment }}
       ACTION: ${{ inputs.action }}
-      FILE_PATH: ${{ inputs.file_path }}
       IMAGE: ${{ inputs.image }}
     steps:
       - name: Checkout code
@@ -45,11 +40,7 @@ jobs:
 
       - name: Resolve target file path
         run: |
-          if [[ -n "$FILE_PATH" ]]; then
-            FILE_PATH_LOWER="$FILE_PATH"
-          else
-            FILE_PATH_LOWER="configuration/${PROJECT,,}/environments/${ENVIRONMENT,,}/$(echo "${ACTION,,}" | tr '.' '-').yaml"
-          fi
+          FILE_PATH_LOWER="configuration/${PROJECT,,}/environments/${ENVIRONMENT,,}/$(echo "${ACTION,,}" | tr '.' '-').yaml"
 
           echo "FILE_PATH_LOWER=${FILE_PATH_LOWER}" >>${GITHUB_ENV}
 

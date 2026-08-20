@@ -1,6 +1,6 @@
 nameOverride: untitledproject-api-monolith
 
-image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.monolith:develop-20260813-194801-064983af"
+image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.monolith:develop-20260819-211255-3d3398a-03061"
 
 dotNetEnvironment: DevTest
 

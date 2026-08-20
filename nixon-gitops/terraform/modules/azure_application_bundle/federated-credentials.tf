@@ -4,7 +4,7 @@ locals {
       for serviceaccount in credential.kubernetes_namespace.serviceaccounts : {
         key     = format("kubernetes-%s-%s", credential.kubernetes_namespace.namespace, serviceaccount)
         subject = format("system:serviceaccount:%s:%s", credential.kubernetes_namespace.namespace, serviceaccount)
-        issuer  = credential.kubernetes_namespace.issuer
+        issuer  = coalesce(credential.kubernetes_namespace.issuer, var.cluster_issuer)
       }
       ] : credential.subject_identifier != null ? [
       {

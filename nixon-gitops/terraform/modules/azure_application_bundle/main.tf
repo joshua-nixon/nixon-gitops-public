@@ -3,8 +3,16 @@ locals {
 }
 
 resource "azuread_application" "this" {
-  display_name = var.display_name
-  tags         = local.tags_set
+  display_name            = var.display_name
+  tags                    = local.tags_set
+  group_membership_claims = var.group_membership_claims
+
+  dynamic "web" {
+    for_each = var.redirect_url != null ? [var.redirect_url] : []
+    content {
+      redirect_uris = [web.value]
+    }
+  }
 }
 
 resource "azuread_service_principal" "this" {

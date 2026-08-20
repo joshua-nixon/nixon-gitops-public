@@ -2,14 +2,14 @@ nameOverride: tier9-abo-slime
 
 dotNetEnvironment: Production
 
-image: "sharedpersonalcontaineregistry.azurecr.io/abo.slime:master-20260809-175850-415ba32e"
+image: "sharedpersonalcontaineregistry.azurecr.io/abo.slime:master-20260820-175621-b5ce595b"
 
 resources:
   requests:
     memory: 250Mi
     cpu: 50m
   limits:
-    memory: 290Mi
+    memory: 350Mi
     cpu: 500m
 
 extraEnvValues:
