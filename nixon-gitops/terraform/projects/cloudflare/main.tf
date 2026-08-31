@@ -16,7 +16,11 @@ locals {
       id        = zone.id
       redirects = zone.redirects == null ? [] : zone.redirects
       waf_rules = zone.waf_rules == null ? [] : zone.waf_rules
-      records   = flatten([for r in zone.records : [for ip in local.server_ips : merge(r, { content = ip })]])
+      records = flatten([
+        for r in zone.records : lookup(r, "content", null) != null ? [r] : [
+          for ip in local.server_ips : merge(r, { content = ip })
+        ]
+      ])
     }
   }
 }

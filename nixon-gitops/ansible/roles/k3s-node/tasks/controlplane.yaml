@@ -4,8 +4,8 @@
       {{[
         '--cluster-init', 
         '--tls-san ' + inventory_hostname, 
-        '--tls-san ' + netbird_private_ip,
-        '--node-ip ' + netbird_private_ip,
+        '--tls-san ' + netbird_ipv4,
+        '--node-ip ' + netbird_ipv4,
         '--node-external-ip ' + inventory_hostname
       ] + k3s_controlplane_install_args + k3s_common_install_args 
       }}

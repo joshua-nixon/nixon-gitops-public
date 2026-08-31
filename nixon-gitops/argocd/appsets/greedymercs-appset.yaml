@@ -13,7 +13,7 @@ spec:
     - matrix:
         generators:
           - git:
-              repoURL: https://github.com/nixonjoshua98/nixon-gitops.git
+              repoURL: https://github.com/joshua-nixon/nixon-gitops.git
               revision: main
               files:
                 - path: "argocd/workloads/greedymercs-*.yaml"
@@ -23,17 +23,17 @@ spec:
     metadata:
       name: "{{ .name }}-{{ .environment }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/greedymercs-*.yaml;/configuration/base/values.yaml;/configuration/greedymercs/values.yaml;/configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/greedymercs-*.yaml;/configuration/base/values.yaml;/configuration/greedymercs/values.yaml;/configuration/greedymercs/{{ .environment }}/{{ .name }}.yaml"
     spec:
       project: default
       source:
-        repoURL: https://github.com/nixonjoshua98/nixon-gitops.git
+        repoURL: https://github.com/joshua-nixon/nixon-gitops.git
         targetRevision: main
         path: "{{ .chart }}"
         helm:
           releaseName: "{{ .name }}-{{ .environment }}"
-          ignoreMissingValueFiles: false
-          valueFiles: ["/configuration/base/values.yaml", "/configuration/greedymercs/values.yaml", "/configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml"]
+          ignoreMissingValueFiles: true
+          valueFiles: ["/configuration/base/values.yaml", "/configuration/greedymercs/values.yaml", "/configuration/greedymercs/{{ .environment }}/{{ .name }}.yaml"]
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{ .namespace }}"
@@ -45,7 +45,7 @@ spec:
       syncPolicy:
         managedNamespaceMetadata:
           labels:
-            custom.kubernetes.io/require-image-registry-secret: "true"
+            custom.kubernetes.io/add-image-pull-secret: "true"
         automated:
           prune: true
           selfHeal: true

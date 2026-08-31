@@ -16,14 +16,17 @@ spec:
       labels:
 {{- include "nixon-deployable.selectorLabels" . | nindent 8 }}
     spec:
+
 {{- if .Values.imagePullSecret }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecret }}
 {{- end }}
+
 {{- if .Values.extraVolumes }}
       volumes:
 {{- tpl (toYaml .Values.extraVolumes) . | nindent 8 }}
 {{- end }}
+
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -37,6 +40,12 @@ spec:
       containers:
         - name: {{ include "nixon-deployable.name" . }}
           image: {{ .Values.image | quote }}
+
+{{- $securityContext := include "nixon-deployable.securityContext" . -}}
+{{- if $securityContext }}
+          securityContext:
+{{ $securityContext | indent 12 }}
+{{- end }}
 
 {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
@@ -61,21 +70,23 @@ spec:
 {{- end }}
 {{- end }}
           env:
+{{- if .Values.dotNetEnvironment }}
             - name: DOTNET_hostBuilder:reloadConfigOnChange
               value: 'false'
-{{- if .Values.dotNetEnvironment }}
             - name: DOTNET_ENVIRONMENT
               value: {{ .Values.dotNetEnvironment | quote }}
-{{- end }}
 {{- $asp := include "nixon-deployable.aspnetCoreUrlsEnvValue" . }}
 {{- if $asp }}
             - name: ASPNETCORE_URLS
               value: {{ $asp | quote }}
 {{- end }}
+{{- end }}
+
 {{- if .Values.containerPorts.metrics.enabled }}
             - name: METRICS_PORT
               value: {{ .Values.containerPorts.metrics.containerPort | quote }}
 {{- end }}
+
 {{- range .Values.extraEnvValues }}
 {{- if .externalSecretKeyRef }}
             - name: {{ .name }}
@@ -84,11 +95,12 @@ spec:
                   name: {{ include "nixon-deployable.name" $ }}
                   key: {{ .externalSecretKeyRef.key }}
 {{- else }}
-{{ toYaml (list .) | nindent 12 }}
+            - name: {{ .name }}
+              value: {{ .value }}
 {{- end }}
 {{- end }}
 
 {{- if .Values.extraVolumeMounts }}
           volumeMounts:
-{{- tpl (toYaml .Values.extraVolumeMounts) . | nindent 12 }}
+{{- toYaml .Values.extraVolumeMounts | nindent 12 }}
 {{- end }}

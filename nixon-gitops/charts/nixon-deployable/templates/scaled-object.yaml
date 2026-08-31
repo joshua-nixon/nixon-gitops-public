@@ -1,0 +1,26 @@
+{{- if .Values.interceptorRoute.enabled }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "nixon-deployable.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "nixon-deployable.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    name: {{ include "nixon-deployable.name" . }}
+    kind: Deployment
+    apiVersion: apps/v1
+  minReplicaCount: 0
+  maxReplicaCount: 3
+  cooldownPeriod: 10800 # 3 Hours
+  triggers:
+    - type: external-push
+      metadata:
+        scalerAddress: {{ .Values.interceptorRoute.scalerAddress | quote }}
+        interceptorRoute: {{ include "nixon-deployable.name" . }}-proxy
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: "80"
+{{- end }}

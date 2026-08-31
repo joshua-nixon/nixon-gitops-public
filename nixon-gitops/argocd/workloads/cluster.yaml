@@ -1,5 +1,12 @@
-namespace: default
-
 components:
   - name: helm-release-checker
     chart: charts/nixon-cronjob
+    namespace: default
+
+  - name: nixon-monitoring-resources
+    chart: charts/nixon-monitoring-resources
+    namespace: monitoring
+
+  - name: nixon-cluster-resources
+    chart: charts/nixon-cluster-resources
+    namespace: default

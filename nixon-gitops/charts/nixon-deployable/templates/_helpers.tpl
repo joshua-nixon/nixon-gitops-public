@@ -53,7 +53,6 @@ Create the name of the persistence claim when managed by this chart.
 {{/*
 Build a semicolon-separated ASPNETCORE_URLS value from enabled containerPorts.
 Returns empty string if no ports are enabled.
-Usage: include "nixon-deployable.aspnetcore_urls" .
 */}}
 {{- define "nixon-deployable.aspnetCoreUrlsEnvValue" -}}
 {{- $ports := .Values.containerPorts }}
@@ -72,11 +71,29 @@ Usage: include "nixon-deployable.aspnetcore_urls" .
 {{- end }}
 
 {{/*
-Returns "true" when at least one extraEnvValues entry uses externalSecretKeyRef.
+Name of the ExternalName Service pointing at the KEDA HTTP add-on interceptor.
 */}}
-{{- define "nixon-deployable.requireExternalSecret" -}}
-{{- range .Values.extraEnvValues -}}
-{{- if .externalSecretKeyRef -}}true{{- end -}}
-{{- end -}}
+{{- define "nixon-deployable.proxyServiceName" -}}
+{{- include "nixon-deployable.name" . }}-proxy
 {{- end }}
 
+{{/*
+Ingress backend Service name: the KEDA HTTP proxy when scale-to-zero is enabled, otherwise this app's own Service.
+*/}}
+{{- define "nixon-deployable.ingressServiceName" -}}
+  {{- if .Values.interceptorRoute.enabled -}}
+    {{- include "nixon-deployable.proxyServiceName" . -}}
+  {{- else -}}
+    {{- include "nixon-deployable.name" . -}}
+  {{- end -}}
+{{- end }}
+
+{{/*
+Render the selected securityContext preset as YAML
+*/}}
+{{- define "nixon-deployable.securityContext" -}}
+{{- $preset := get .Values.securityContextPresets .Values.securityContextPreset | default dict -}}
+{{- if and $preset (ne (len $preset) 0) -}}
+{{ toYaml $preset }}
+{{- end -}}
+{{- end -}}

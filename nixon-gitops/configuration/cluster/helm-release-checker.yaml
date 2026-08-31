@@ -1,6 +1,6 @@
 nameOverride: "helm-release-checker"
 
-image: "sharedpersonalcontaineregistry.azurecr.io/helm-release-checker:main-20260814-193842-64def87e"
+image: "sharedpersonalcontaineregistry.azurecr.io/helm-release-checker:sha-744ddfa4577e"
 
 schedule: "0 12 * * *"
 

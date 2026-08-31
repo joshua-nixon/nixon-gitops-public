@@ -5,7 +5,7 @@ appSetValues:
     VALUE_FILES:
       - /configuration/base/values.yaml
       - /configuration/greedymercs/values.yaml
-      - /configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml
+      - /configuration/greedymercs/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: tier9-appset
     NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
@@ -13,7 +13,7 @@ appSetValues:
     VALUE_FILES:
       - /configuration/base/values.yaml
       - /configuration/tier9/values.yaml
-      - /configuration/tier9/environments/{{ .environment }}/{{ .name }}.yaml
+      - /configuration/tier9/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: untitledproject-appset
     NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
@@ -21,14 +21,14 @@ appSetValues:
     VALUE_FILES:
       - /configuration/base/values.yaml
       - /configuration/untitledproject/values.yaml
-      - /configuration/untitledproject/environments/{{ .environment }}/{{ .name }}.yaml
+      - /configuration/untitledproject/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: koruxa-appset
     NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
     ARGO_FILE_PATH: argocd/workloads/koruxa-*.yaml
     VALUE_FILES:
       - /configuration/base/values.yaml
-      - /configuration/koruxa/environments/{{ .environment }}/{{ .name }}.yaml
+      - /configuration/koruxa/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: cluster-appset
     NAME_TEMPLATE: "{{ .name }}"
@@ -36,3 +36,10 @@ appSetValues:
     VALUE_FILES:
       - /configuration/base/values.yaml
       - /configuration/cluster/{{ .name }}.yaml
+
+  - APPSET_NAME: hedgehogscorner-appset
+    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
+    ARGO_FILE_PATH: argocd/workloads/hedgehogscorner-*.yaml
+    VALUE_FILES:
+      - /configuration/base/values.yaml
+      - /configuration/hedgehogscorner/{{ .environment }}/{{ .name }}.yaml

@@ -14,15 +14,15 @@ permissions:
 
 jobs:
   build:
-    uses: nixonjoshua98/shared-workflows/.github/workflows/Template.Build.Docker.ACR.yaml@v1.6
+    uses: joshua-nixon/shared-workflows/.github/workflows/Template.Docker.BuildPush.yaml@v1.11
     with:
-      azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
-      azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
-      azure_subscription_id: ${{ vars.AZURE_SUB_ID }}
-      image_registry: ${{ vars.AZURE_REGISTRY }}
-      image_repository: "helm-release-checker"
-      dockerfile_path: "./source/helm-release-checker/Dockerfile"
-      build_context: "./source/helm-release-checker"
+      azure-client-id: ${{ vars.AZURE_CLIENT_ID }}
+      azure-tenant-id: ${{ vars.AZURE_TENANT_ID }}
+      azure-subscription-id: ${{ vars.AZURE_SUB_ID }}
+      image-registry: ${{ vars.AZURE_REGISTRY }}
+      image-repository: helm-release-checker
+      dockerfile-path: ./source/helm-release-checker/Dockerfile
+      build-context: ./source/helm-release-checker
     secrets: inherit
 
   deploy:
@@ -30,6 +30,6 @@ jobs:
       - build
     uses: ./.github/workflows/Template.UpdateImage.yaml
     with:
-      file_path: "configuration/cluster/helm-release-checker.yaml"
+      file-path: configuration/cluster/helm-release-checker.yaml
       image: ${{ needs.build.outputs.image }}
     secrets: inherit

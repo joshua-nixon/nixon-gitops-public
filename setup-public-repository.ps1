@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 $workspaceRoot = $PSScriptRoot
 $tempGuid      = [System.Guid]::NewGuid().ToString()
-$tempDir       = Join-Path -Path $workspaceRoot -ChildPath (".nixon-gitops.tmp." + $tempGuid)
+$tempDir       = Join-Path -Path $workspaceRoot -ChildPath $tempGuid
 
 New-Item -ItemType Directory -Path $tempDir | Out-Null
 

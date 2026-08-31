@@ -1,11 +1,9 @@
-name: GreedyMercs
+name: HedgehogsCorner
 
 on:
   repository_dispatch:
     types:
-      - greedymercs.api.monolith
-      - greedymercs.discordbot
-      - greedymercs.website
+      - hedgehogscorner.website
 
 permissions:
   contents: write
@@ -14,7 +12,7 @@ jobs:
   patch-image:
     uses: ./.github/workflows/Template.UpdateImage.yaml
     with:
-      project: greedymercs
+      project: hedgehogscorner
       environment: ${{ github.event.client_payload.environment }}
       action: ${{ github.event.action }}
       image: ${{ github.event.client_payload.image }}

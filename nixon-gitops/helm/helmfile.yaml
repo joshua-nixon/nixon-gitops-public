@@ -15,6 +15,8 @@ repositories:
     url: https://grafana.github.io/helm-charts
   - name: traefik
     url: https://traefik.github.io/charts
+  - name: kedacore
+    url: https://kedacore.github.io/charts
 
 helmDefaults:
   historyMax: 1
@@ -30,14 +32,6 @@ releases:
       - netbird/netbird-operator
       - external-secrets/external-secrets
 
-  - name: nixon-monitoring-resources
-    namespace: monitoring
-    chart: ../charts/nixon-monitoring-resources
-    values:
-      - ../configuration/base/values.yaml
-    needs:
-      - monitoring/kube-prometheus-stack
-
   - name: nixon-external-secrets-resources
     namespace: external-secrets
     chart: ../charts/nixon-external-secrets-resources
@@ -45,15 +39,6 @@ releases:
       - ../configuration/base/values.yaml
     needs:
       - external-secrets/external-secrets
-
-  - name: nixon-cluster-resources
-    namespace: default
-    chart: ../charts/nixon-cluster-resources
-    values:
-      - ../configuration/base/values.yaml
-    needs:
-      - cert-manager/cert-manager
-      - external-secrets/nixon-external-secrets-resources
 
   - name: nixon-argocd-resources
     namespace: argocd
@@ -82,7 +67,7 @@ releases:
   - name: argocd
     namespace: argocd
     chart: argo/argo-cd
-    version: 10.3.0
+    version: 10.4.0
     values:
       - values/argocd.yaml
 
@@ -98,7 +83,7 @@ releases:
   - name: traefik
     namespace: traefik
     chart: traefik/traefik
-    version: 41.2.0
+    version: 41.3.0
     values:
       - values/traefik.yaml
 
@@ -114,23 +99,23 @@ releases:
   - name: kube-prometheus-stack
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
-    version: 88.3.0
+    version: 88.5.4
     values:
       - values/kube-prometheus-stack.yaml
 
-  # - name: loki
-  #   namespace: monitoring
-  #   chart: grafana/loki
-  #   version: 7.2.0
-  #   values:
-  #     - values/loki.yaml
+  - name: loki
+    namespace: monitoring
+    chart: grafana/loki
+    version: 7.3.0
+    values:
+      - values/loki.yaml
 
-  # - name: alloy
-  #   namespace: monitoring
-  #   chart: grafana/alloy
-  #   version: 1.11.0
-  #   values:
-  #     - values/alloy.yaml
+  - name: alloy
+    namespace: monitoring
+    chart: grafana/alloy
+    version: 1.12.0
+    values:
+      - values/alloy.yaml
 
   - name: cnpg
     namespace: cnpg-system
@@ -158,3 +143,22 @@ releases:
     namespace: kube-system
     chart: hcloud/hcloud-csi
     version: 2.22.0
+
+  - name: keda
+    namespace: keda
+    chart: kedacore/keda
+    version: 2.20.2
+    needs:
+      - cert-manager/cert-manager
+      - monitoring/kube-prometheus-stack
+    values:
+      - values/keda.yaml
+
+  - name: keda-http
+    namespace: keda
+    chart: kedacore/keda-add-ons-http
+    version: 0.15.0
+    needs:
+      - keda/keda
+    values:
+      - values/keda-http.yaml

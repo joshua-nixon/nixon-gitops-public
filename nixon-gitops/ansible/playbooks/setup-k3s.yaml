@@ -1,10 +1,10 @@
-- name: Process controlplanes
+- name: Process Controlplanes
   hosts: controlplane
   become: true
   roles:
     - k3s-node
 
-- name: Process agents
+- name: Process Agents
   hosts: agent
   become: true
   roles:

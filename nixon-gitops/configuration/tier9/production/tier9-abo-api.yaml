@@ -1,8 +1,11 @@
 nameOverride: tier9-abo-api
 
+image: "sharedpersonalcontaineregistry.azurecr.io/abo.api:master-20260820-175617-b5ce595b"
+
 dotNetEnvironment: Production
 
-image: "sharedpersonalcontaineregistry.azurecr.io/abo.api:master-20260820-175617-b5ce595b"
+interceptorRoute:
+  enabled: true
 
 resources:
   requests:
@@ -11,11 +14,6 @@ resources:
   limits:
     memory: 140Mi
     cpu: 500m
-
-extraEnvValues:
-  - name: PG_PASSWORD
-    externalSecretKeyRef:
-      key: ABO-PG-USER-WEB
 
 containerPorts:
   http:
@@ -27,6 +25,11 @@ service:
     http:
       enabled: true
 
+extraEnvValues:
+  - name: PG_PASSWORD
+    externalSecretKeyRef:
+      key: ABO-PG-USER-WEB
+
 ingress:
   enabled: true
   rules:
@@ -34,6 +37,3 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-
-hpa:
-  enabled: true

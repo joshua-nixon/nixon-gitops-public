@@ -6,5 +6,8 @@ components:
   - name: greedymercs-api-monolith
     chart: charts/nixon-deployable
 
+  - name: greedymercs-website
+    chart: charts/nixon-deployable
+
   - name: greedymercs-postgresql
     chart: charts/nixon-cnpg-cluster

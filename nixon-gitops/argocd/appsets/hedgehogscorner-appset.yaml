@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: cluster-appset
+  name: hedgehogscorner-appset
   namespace: argocd
   labels:
     custom.kubernetes.io/is-adhoc: "true"
@@ -16,14 +16,14 @@ spec:
               repoURL: https://github.com/joshua-nixon/nixon-gitops.git
               revision: main
               files:
-                - path: "argocd/workloads/cluster.yaml"
+                - path: "argocd/workloads/hedgehogscorner-*.yaml"
           - list:
               elementsYaml: "{{ .components | toJson }}"
   template:
     metadata:
-      name: "{{ .name }}"
+      name: "{{ .name }}-{{ .environment }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-cronjob;/charts/nixon-monitoring-resources;/charts/nixon-library;/charts/nixon-cluster-resources;/argocd/workloads/cluster.yaml;/configuration/base/values.yaml;/configuration/cluster/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/argocd/workloads/hedgehogscorner-*.yaml;/configuration/base/values.yaml;/configuration/hedgehogscorner/{{ .environment }}/{{ .name }}.yaml"
     spec:
       project: default
       source:
@@ -31,9 +31,9 @@ spec:
         targetRevision: main
         path: "{{ .chart }}"
         helm:
-          releaseName: "{{ .name }}"
+          releaseName: "{{ .name }}-{{ .environment }}"
           ignoreMissingValueFiles: true
-          valueFiles: ["/configuration/base/values.yaml", "/configuration/cluster/{{ .name }}.yaml"]
+          valueFiles: ["/configuration/base/values.yaml", "/configuration/hedgehogscorner/{{ .environment }}/{{ .name }}.yaml"]
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{ .namespace }}"

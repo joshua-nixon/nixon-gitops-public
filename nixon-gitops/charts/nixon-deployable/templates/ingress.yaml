@@ -18,7 +18,7 @@ spec:
             pathType: {{ $path.pathType }}
             backend:
               service:
-                name: {{ include "nixon-deployable.name" $ }}
+                name: {{ include "nixon-deployable.ingressServiceName" $ }}
                 port:
                   name: http
 {{- end }}

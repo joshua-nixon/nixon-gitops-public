@@ -15,7 +15,14 @@ locals {
       ] : [
       for branch in credential.github.branches : {
         key     = format("github-%s-%s-%s", credential.github.organisation, credential.github.repository, branch)
-        subject = format("repo:%s/%s:ref:refs/heads/%s", credential.github.organisation, credential.github.repository, branch)
+        subject = format(
+          "repo:%s@%s/%s@%s:ref:refs/heads/%s", 
+          credential.github.organisation, 
+          credential.github.organisation_id,
+          credential.github.repository, 
+          credential.github.repository_id,
+          branch
+        )
         issuer  = "https://token.actions.githubusercontent.com"
       }
     ]

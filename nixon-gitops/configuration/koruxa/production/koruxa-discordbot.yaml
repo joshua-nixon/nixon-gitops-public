@@ -2,6 +2,8 @@ nameOverride: koruxa-discordbot
 
 image: "sharedpersonalcontaineregistry.azurecr.io/koruxa.discordbot:master-20260802-215036-546c343f"
 
+dotNetEnvironment: Production
+
 resources:
   requests:
     memory: 80Mi
@@ -29,5 +31,3 @@ persistence:
   claimName: "{{ .Release.Name }}-sqlite"
   storageClassName: local-path
   size: 1Gi
-
-dotNetEnvironment: Production

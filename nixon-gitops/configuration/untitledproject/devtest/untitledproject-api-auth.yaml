@@ -4,6 +4,29 @@ image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:devel
 
 dotNetEnvironment: DevTest
 
+interceptorRoute:
+  enabled: true
+
+containerPorts:
+  http:
+    enabled: true
+  metrics:
+    enabled: true
+
+service:
+  enabled: true
+  ports:
+    http:
+      enabled: true
+    metrics:
+      enabled: true
+
+readinessProbe:
+  enabled: true
+
+serviceMonitor:
+  enabled: true
+
 resources:
   requests:
     memory: 140Mi
@@ -23,6 +46,3 @@ ingress:
           pathType: Prefix
         - path: /oauth2
           pathType: Prefix
-
-hpa:
-  enabled: true

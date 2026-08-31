@@ -1,0 +1,33 @@
+nameOverride: hedgehogscorner-website
+
+image: "sharedpersonalcontaineregistry.azurecr.io/hedgehogscorner.website:sha-83aa6d9ea673"
+
+dotNetEnvironment: Production
+
+securityContextPreset: "unset"
+
+resources:
+  limits:
+    memory: 50Mi
+    cpu: 50m
+
+interceptorRoute:
+  enabled: true
+
+containerPorts:
+  http:
+    enabled: true
+
+service:
+  enabled: true
+  ports:
+    http:
+      enabled: true
+
+ingress:
+  enabled: true
+  rules:
+    - host: www.hedgehogscorner.info
+      paths:
+        - path: /
+          pathType: Prefix

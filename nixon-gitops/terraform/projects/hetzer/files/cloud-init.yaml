@@ -12,8 +12,13 @@ timezone: UTC
 
 locale: en_US.UTF-8
 
-runcmd:
-  - echo "Bringing up Hetzner network link"
-  - sudo ip link set enp7s0 up 
+write_files:
+  - path: /etc/sysctl.d/99-inotify.conf
+    permissions: "0644"
+    content: |
+      fs.inotify.max_user_instances=8192
+      fs.inotify.max_user_watches=524288
 
+runcmd:
+  - sysctl --system
   - echo "cloud-init completed"

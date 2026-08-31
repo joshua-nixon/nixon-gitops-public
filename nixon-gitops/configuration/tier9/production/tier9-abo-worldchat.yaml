@@ -1,21 +1,21 @@
-nameOverride: tier9-abo-slime
+nameOverride: tier9-abo-worldchat
+
+image: "sharedpersonalcontaineregistry.azurecr.io/abo.worldchat:master-20260820-175620-b5ce595b"
 
 dotNetEnvironment: Production
 
-image: "sharedpersonalcontaineregistry.azurecr.io/abo.slime:master-20260820-175621-b5ce595b"
-
 resources:
   requests:
-    memory: 250Mi
+    memory: 140Mi
     cpu: 50m
   limits:
-    memory: 350Mi
+    memory: 200Mi
     cpu: 500m
 
 extraEnvValues:
   - name: BOT_TOKEN
     externalSecretKeyRef:
-      key: ABO-SLIME-TOKEN
+      key: ABO-WORLDCHAT-TOKEN
 
   - name: PG_PASSWORD
     externalSecretKeyRef:

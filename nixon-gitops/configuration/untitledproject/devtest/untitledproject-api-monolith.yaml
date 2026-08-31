@@ -4,6 +4,29 @@ image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.monolith:d
 
 dotNetEnvironment: DevTest
 
+interceptorRoute:
+  enabled: true
+
+containerPorts:
+  http:
+    enabled: true
+  metrics:
+    enabled: true
+
+service:
+  enabled: true
+  ports:
+    http:
+      enabled: true
+    metrics:
+      enabled: true
+
+readinessProbe:
+  enabled: true
+
+serviceMonitor:
+  enabled: true
+
 resources:
   requests:
     memory: 120Mi
@@ -19,6 +42,3 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-
-hpa:
-  enabled: true

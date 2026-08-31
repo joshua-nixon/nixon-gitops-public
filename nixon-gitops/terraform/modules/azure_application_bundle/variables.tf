@@ -28,7 +28,9 @@ variable "federated_credentials" {
     }))
     github = optional(object({
       organisation = string
+      organisation_id = number
       repository   = string
+      repository_id = number
       branches     = list(string)
     }))
   }))

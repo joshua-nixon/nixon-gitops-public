@@ -6,6 +6,18 @@ extraVolumes: []
 
 extraVolumeMounts: []
 
+securityContextPreset: restricted
+
+securityContextPresets:
+  restricted:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+
 persistence:
   enabled: false
   claimName: null
@@ -51,3 +63,8 @@ readinessProbe:
 
 ingress:
   enabled: false
+
+interceptorRoute:
+  enabled: false
+  interceptorAddress: "keda-add-ons-http-interceptor-proxy.keda"
+  scalerAddress: "keda-add-ons-http-external-scaler.keda:9090"

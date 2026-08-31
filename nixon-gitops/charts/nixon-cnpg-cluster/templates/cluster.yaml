@@ -59,12 +59,13 @@ spec:
   postgresql:     
     parameters:
       pg_stat_statements.max: '1000'
-      huge_pages: 'off'
+      huge_pages: 'try'
       log_timezone: 'Etc/UTC'
       log_min_duration_statement: '200'
       datestyle: 'iso, dmy'
       timezone: 'Etc/UTC'
       effective_io_concurrency: '200'
+      random_page_cost: '1.1'
 {{- range $key, $value := .Values.cluster.parameters }}
       {{ $key }}: {{ $value | quote }}
 {{- end }}

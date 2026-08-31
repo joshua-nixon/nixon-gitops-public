@@ -3,7 +3,6 @@ nixon-gitops/ansible/inventory.ini
 
 nixon-gitops/helm/values
 
-nixon-gitops/charts/nixon-cluster-resources/values.yaml
 nixon-gitops/charts/nixon-ingress-resources
 nixon-gitops/charts/nixon-external-secrets-resources/values.yaml
 

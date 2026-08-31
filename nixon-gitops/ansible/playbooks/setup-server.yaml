@@ -1,4 +1,4 @@
-- name: Process all servers
+- name: Process Servers
   hosts: all
   become: true
   roles:
