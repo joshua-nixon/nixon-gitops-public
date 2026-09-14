@@ -1,0 +1,5 @@
+- name: Process initial node setup
+  hosts: server
+  become: true
+  roles:
+    - netbird-client

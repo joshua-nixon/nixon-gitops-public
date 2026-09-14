@@ -1,4 +1,4 @@
-{{- if .Values.interceptorRoute.enabled }}
+{{- if .Values.scaledObject.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -8,7 +8,7 @@ metadata:
 {{- include "nixon-deployable.labels" . | nindent 4 }}
 spec:
   type: ExternalName
-  externalName: {{ .Values.interceptorRoute.interceptorAddress }}
+  externalName: {{ .Values.scaledObject.interceptorAddress }}
   ports:
     - name: http
       port: {{ .Values.service.ports.http.port }}

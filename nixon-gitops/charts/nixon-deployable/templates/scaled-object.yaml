@@ -1,4 +1,4 @@
-{{- if .Values.interceptorRoute.enabled }}
+{{- if .Values.scaledObject.enabled }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
@@ -17,7 +17,7 @@ spec:
   triggers:
     - type: external-push
       metadata:
-        scalerAddress: {{ .Values.interceptorRoute.scalerAddress | quote }}
+        scalerAddress: {{ .Values.scaledObject.scalerAddress | quote }}
         interceptorRoute: {{ include "nixon-deployable.name" . }}-proxy
     - type: cpu
       metricType: Utilization

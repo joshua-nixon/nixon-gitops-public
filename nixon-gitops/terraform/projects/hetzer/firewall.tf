@@ -12,7 +12,7 @@ locals {
   }
 
   firewall_rules = flatten([
-    for rule in var.hcloud_firewall_rules : [
+    for rule in var.firewall_rules : [
       for group in rule.groups : {
         description = "${rule.description} (@${title(group)})"
         protocol    = rule.protocol

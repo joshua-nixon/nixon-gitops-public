@@ -11,18 +11,23 @@ Import-Module powershell-yaml -ErrorAction Stop
 $repoRoot               = Split-Path $PSScriptRoot -Parent
 $manifestsRoot          = Join-Path $repoRoot 'argocd'
 $appSetsRenderedRoot    = Join-Path $manifestsRoot 'appsets'
+$workloadsRenderedRoot  = Join-Path $manifestsRoot 'workloads'
 $valuesPath             = Join-Path $manifestsRoot 'config.yaml'
 $templateRoot           = Join-Path $manifestsRoot 'templates'
 $appsetTemplatePath     = Join-Path $templateRoot 'appset.tpl.yaml'
 $renderValues           = Get-Content -LiteralPath $valuesPath -Raw | ConvertFrom-Yaml
 $appsetTemplate         = Get-Content -LiteralPath $appsetTemplatePath -Raw
 
-function To-Crlf ($text) {
-    return ($text -replace "`r?`n", "`r`n")
-}
-
 function Has-Property([object] $object, [string] $name) {
     return (([PSCustomObject]$object).PSObject.Properties.Name -contains $name)
+}
+
+function Get-PropertyValue([object] $object, [string] $name, [object] $defaultValue = $null) {
+    if (Has-Property -Object $object -Name $name) {
+        return $object.$name
+    }
+
+    return $defaultValue
 }
 
 function Render-ArrayValue([object[]]$arrayValue) {
@@ -93,31 +98,53 @@ function Add-LocalChartDependencyPaths([string]$chartPath, [System.Collections.G
     }
 }
 
-function Get-ManifestGeneratePaths([hashtable]$item) {
+function Get-ManifestGeneratePaths([string]$workloadPath, [object]$applicationSet, [object[]]$valueFiles) {
     $manifestPaths = New-Object System.Collections.Generic.List[string]
 
-    $appsetFiles = @(Resolve-Path -Path (Join-Path $repoRoot (Normalize-RepoPath $item.ARGO_FILE_PATH)) -ErrorAction Stop)
+    foreach ($application in @($applicationSet.applications)) {
+        $chartPath = Get-PropertyValue -object $application -name 'chart' -defaultValue 'charts/nixon-deployable'
 
-    foreach ($appsetFile in $appsetFiles) {
-        $appset = Get-Content -LiteralPath $appsetFile.Path -Raw | ConvertFrom-Yaml
+        $manifestPaths.Add((To-RepoAbsolutePath $chartPath))
+        Add-LocalChartDependencyPaths -chartPath $chartPath -manifestPaths $manifestPaths
+    }
 
-        if ($null -ne $appset.components) {
-            foreach ($component in @($appset.components)) {
-                if ($component.chart) {
-                    $manifestPaths.Add((To-RepoAbsolutePath $component.chart))
-                    Add-LocalChartDependencyPaths -chartPath $component.chart -manifestPaths $manifestPaths
+    $manifestPaths.Add((To-RepoAbsolutePath $workloadPath))
+
+    foreach ($valueFile in $valueFiles) {
+        $manifestPaths.Add((To-RepoAbsolutePath $valueFile))
+    }
+
+    return ($manifestPaths | Select-Object -Unique) -join ';'
+}
+
+function Get-Applications([string]$applicationSetName, [object]$applicationSet) {
+    $applications = @()
+    $environments = @(Get-PropertyValue -object $applicationSet -name 'environments' -defaultValue @())
+
+    foreach ($application in @($applicationSet.applications)) {
+        $namespaceOverride = Get-PropertyValue -object $application -name 'namespace'
+        $chart = Get-PropertyValue -object $application -name 'chart' -defaultValue 'charts/nixon-deployable'
+
+        if ($environments.Count -eq 0) {
+            $applications += [PSCustomObject]@{
+                name        = $application.name
+                chart       = $chart
+                namespace   = if ($null -ne $namespaceOverride) { $namespaceOverride } else { $applicationSetName }
+            }
+        }
+        else {
+            foreach ($environment in $environments) {
+                $applications += [PSCustomObject]@{
+                    name        = $application.name
+                    chart       = $chart
+                    environment = $environment
+                    namespace   = if ($null -ne $namespaceOverride) { $namespaceOverride } else { "$applicationSetName-$environment" }
                 }
             }
         }
     }
 
-    $manifestPaths.Add((To-RepoAbsolutePath $item.ARGO_FILE_PATH))
-
-    foreach ($valueFile in @($item.VALUE_FILES)) {
-        $manifestPaths.Add((To-RepoAbsolutePath $valueFile))
-    }
-
-    return ($manifestPaths | Select-Object -Unique) -join ';'
+    return $applications
 }
 
 function Render-Template([string]$template, [object]$item) {
@@ -137,19 +164,39 @@ function Render-Template([string]$template, [object]$item) {
     return $rendered
 }
 
-foreach ($directory in @($appSetsRenderedRoot)) {
-    if (-not (Test-Path -LiteralPath $directory)) {
-        [System.IO.Directory]::CreateDirectory($directory) | Out-Null
-    }
+if (Test-Path -LiteralPath $workloadsRenderedRoot) {
+    Remove-Item -LiteralPath $workloadsRenderedRoot -Recurse -Force
 }
 
-foreach ($item in @($renderValues.appSetValues)) {
-    $item.MANIFEST_GENERATE_PATHS = Get-ManifestGeneratePaths -item $item
-    
-    $rendered   = Render-Template -template $appsetTemplate -item $item
-    $outputPath = Join-Path $appSetsRenderedRoot "$($item.APPSET_NAME).yaml"
+foreach ($directory in @($appSetsRenderedRoot, $workloadsRenderedRoot)) {
+    [System.IO.Directory]::CreateDirectory($directory) | Out-Null
+}
 
-    [System.IO.File]::WriteAllText($outputPath, (To-Crlf -text $rendered), [System.Text.UTF8Encoding]::new($false))
+foreach ($applicationSetName in $renderValues.applicationSets.Keys) {
+    $applicationSet = $renderValues.applicationSets[$applicationSetName]
+    $applications = @(Get-Applications -applicationSetName $applicationSetName -applicationSet $applicationSet)
+    $valueFiles = @(Get-PropertyValue -object $applicationSet -name 'valueFiles' -defaultValue @())
+    $workload = [PSCustomObject]@{
+        applications = $applications
+    }
+    $workloadPath = "argocd/workloads/$applicationSetName-workload.yaml"
+    $workloadOutputPath = Join-Path $workloadsRenderedRoot "$applicationSetName-workload.yaml"
+
+    [System.IO.File]::WriteAllText($workloadOutputPath, ($workload | ConvertTo-Yaml), [System.Text.UTF8Encoding]::new($false))
+
+    Write-Host "Wrote $workloadOutputPath"
+
+    $item = [ordered]@{
+        APPSET_NAME            = "$applicationSetName-appset"
+        ARGO_FILE_PATH          = $workloadPath
+        MANIFEST_GENERATE_PATHS = Get-ManifestGeneratePaths -workloadPath $workloadPath -applicationSet $applicationSet -valueFiles $valueFiles
+        NAME_TEMPLATE           = $applicationSet.applicationNameTemplate
+        VALUE_FILES             = $valueFiles
+    }
+    $rendered = Render-Template -template $appsetTemplate -item $item
+    $outputPath = Join-Path $appSetsRenderedRoot "$applicationSetName-appset.yaml"
+
+    [System.IO.File]::WriteAllText($outputPath, $rendered, [System.Text.UTF8Encoding]::new($false))
 
     Write-Host "Wrote $outputPath"
 }

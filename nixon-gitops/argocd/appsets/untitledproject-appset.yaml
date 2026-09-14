@@ -16,14 +16,14 @@ spec:
               repoURL: https://github.com/joshua-nixon/nixon-gitops.git
               revision: main
               files:
-                - path: "argocd/workloads/untitledproject-*.yaml"
+                - path: "argocd/workloads/untitledproject-workload.yaml"
           - list:
-              elementsYaml: "{{ .components | toJson }}"
+              elementsYaml: "{{ .applications | toJson }}"
   template:
     metadata:
       name: "{{ .name }}-{{ .environment }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/untitledproject-*.yaml;/configuration/base/values.yaml;/configuration/untitledproject/values.yaml;/configuration/untitledproject/{{ .environment }}/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/untitledproject-workload.yaml;/configuration/base/values.yaml;/configuration/untitledproject/values.yaml;/configuration/untitledproject/{{ .environment }}/{{ .name }}.yaml"
     spec:
       project: default
       source:

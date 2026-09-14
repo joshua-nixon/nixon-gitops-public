@@ -16,14 +16,14 @@ spec:
               repoURL: https://github.com/joshua-nixon/nixon-gitops.git
               revision: main
               files:
-                - path: "argocd/workloads/hedgehogscorner-*.yaml"
+                - path: "argocd/workloads/hedgehogscorner-workload.yaml"
           - list:
-              elementsYaml: "{{ .components | toJson }}"
+              elementsYaml: "{{ .applications | toJson }}"
   template:
     metadata:
       name: "{{ .name }}-{{ .environment }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/argocd/workloads/hedgehogscorner-*.yaml;/configuration/base/values.yaml;/configuration/hedgehogscorner/{{ .environment }}/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/argocd/workloads/hedgehogscorner-workload.yaml;/configuration/base/values.yaml;/configuration/hedgehogscorner/{{ .environment }}/{{ .name }}.yaml"
     spec:
       project: default
       source:

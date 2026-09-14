@@ -1,0 +1,17 @@
+applications:
+- name: tier9-abo-api
+  chart: charts/nixon-deployable
+  environment: production
+  namespace: tier9-production
+- name: tier9-abo-slime
+  chart: charts/nixon-deployable
+  environment: production
+  namespace: tier9-production
+- name: tier9-abo-worldchat
+  chart: charts/nixon-deployable
+  environment: production
+  namespace: tier9-production
+- name: tier9-postgresql
+  chart: charts/nixon-cnpg-cluster
+  environment: production
+  namespace: tier9-production

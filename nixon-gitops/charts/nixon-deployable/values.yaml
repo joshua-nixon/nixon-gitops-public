@@ -64,7 +64,7 @@ readinessProbe:
 ingress:
   enabled: false
 
-interceptorRoute:
+scaledObject:
   enabled: false
   interceptorAddress: "keda-add-ons-http-interceptor-proxy.keda"
   scalerAddress: "keda-add-ons-http-external-scaler.keda:9090"

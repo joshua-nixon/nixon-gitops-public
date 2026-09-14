@@ -4,10 +4,8 @@
 
 az config set extension.use_dynamic_install=yes_without_prompt
 
-kubectl config use-context k3s-cluster-admin
-
 az connectedk8s connect \
-    --name k3s-cluster-290726 \
+    --name talos-cluster-080926 \
     --resource-group rg-v1-shared \
     --location uksouth \
     --enable-oidc-issuer \

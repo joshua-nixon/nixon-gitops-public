@@ -51,18 +51,20 @@ variable "azure_applications" {
     federated_credentials = optional(list(object({
       subject_identifier = optional(string)
       issuer             = optional(string)
-      kubernetes_namespace = optional(object({
-        namespace       = string
-        issuer          = optional(string)
-        serviceaccounts = list(string)
+      serviceaccounts = optional(object({
+        issuer = string
+        accounts = list(object({
+          name      = string
+          namespace = string
+        }))
       }))
 
       github = optional(object({
-        organisation = string
+        organisation    = string
         organisation_id = number
-        repository   = string
-        repository_id = number
-        branches     = list(string)
+        repository      = string
+        repository_id   = number
+        branches        = list(string)
       }))
     })), [])
   }))
@@ -76,9 +78,4 @@ variable "azure_groups" {
     mail_nickname = optional(string)
   }))
   default = {}
-}
-
-variable "cluster_issuer" {
-  type = string
-  default = null
 }

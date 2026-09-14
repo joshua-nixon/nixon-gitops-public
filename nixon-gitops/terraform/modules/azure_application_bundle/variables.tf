@@ -21,25 +21,22 @@ variable "federated_credentials" {
   type = list(object({
     subject_identifier = optional(string)
     issuer             = optional(string)
-    kubernetes_namespace = optional(object({
-      namespace       = string
-      issuer          = optional(string)
-      serviceaccounts = list(string)
+    serviceaccounts = optional(object({
+      issuer = string
+      accounts = list(object({
+        name      = string
+        namespace = string
+      }))
     }))
     github = optional(object({
-      organisation = string
+      organisation    = string
       organisation_id = number
-      repository   = string
-      repository_id = number
-      branches     = list(string)
+      repository      = string
+      repository_id   = number
+      branches        = list(string)
     }))
   }))
   default = []
-}
-
-variable "cluster_issuer" {
-  type    = string
-  default = null
 }
 
 variable "tags" {

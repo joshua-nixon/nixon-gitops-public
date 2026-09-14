@@ -11,9 +11,6 @@ resources:
     memory: 50Mi
     cpu: 50m
 
-interceptorRoute:
-  enabled: true
-
 containerPorts:
   http:
     enabled: true

@@ -81,7 +81,7 @@ Name of the ExternalName Service pointing at the KEDA HTTP add-on interceptor.
 Ingress backend Service name: the KEDA HTTP proxy when scale-to-zero is enabled, otherwise this app's own Service.
 */}}
 {{- define "nixon-deployable.ingressServiceName" -}}
-  {{- if .Values.interceptorRoute.enabled -}}
+  {{- if .Values.scaledObject.enabled -}}
     {{- include "nixon-deployable.proxyServiceName" . -}}
   {{- else -}}
     {{- include "nixon-deployable.name" . -}}

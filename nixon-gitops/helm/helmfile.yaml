@@ -17,28 +17,42 @@ repositories:
     url: https://traefik.github.io/charts
   - name: kedacore
     url: https://kedacore.github.io/charts
+  - name: containeroo
+    url: https://charts.containeroo.ch
 
 helmDefaults:
   historyMax: 1
-  kubeContext: k3s-cluster-admin
+  kubeContext: default
 
 releases:
   - name: nixon-netbird-resources
     namespace: netbird
     chart: ../charts/nixon-netbird-resources
-    values:
-      - ../configuration/base/values.yaml
     needs:
       - netbird/netbird-operator
       - external-secrets/external-secrets
+    values:
+      - ../configuration/base/values.yaml
 
   - name: nixon-external-secrets-resources
     namespace: external-secrets
     chart: ../charts/nixon-external-secrets-resources
-    values:
-      - ../configuration/base/values.yaml
     needs:
       - external-secrets/external-secrets
+    values:
+      - ../configuration/base/values.yaml
+
+  - name: nixon-monitoring-resources
+    namespace: monitoring
+    chart: ../charts/nixon-monitoring-resources
+    values:
+      - ../configuration/base/values.yaml
+
+  - name: nixon-cluster-resources
+    namespace: default
+    chart: ../charts/nixon-cluster-resources
+    values:
+      - ../configuration/base/values.yaml
 
   - name: nixon-argocd-resources
     namespace: argocd
@@ -67,7 +81,7 @@ releases:
   - name: argocd
     namespace: argocd
     chart: argo/argo-cd
-    version: 10.4.0
+    version: 10.9.0
     values:
       - values/argocd.yaml
 
@@ -84,13 +98,15 @@ releases:
     namespace: traefik
     chart: traefik/traefik
     version: 41.3.0
+    needs:
+      - monitoring/kube-prometheus-stack
     values:
       - values/traefik.yaml
 
   - name: external-secrets
     namespace: external-secrets
     chart: external-secrets/external-secrets
-    version: 2.9.0
+    version: 2.10.0
     values:
       - values/external-secrets.yaml
     needs:
@@ -100,10 +116,21 @@ releases:
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
     version: 88.5.4
+    # hooks:
+    #   - events: ["prepare"]
+    #     showlogs: true
+    #     command: "kubectl"
+    #     args:
+    #       - "label"
+    #       - "namespace"
+    #       - "monitoring"
+    #       - "pod-security.kubernetes.io/enforce=privileged"
+    #       - "--overwrite"
     values:
       - values/kube-prometheus-stack.yaml
 
   - name: loki
+    installed: false
     namespace: monitoring
     chart: grafana/loki
     version: 7.3.0
@@ -111,6 +138,7 @@ releases:
       - values/loki.yaml
 
   - name: alloy
+    installed: false
     namespace: monitoring
     chart: grafana/alloy
     version: 1.12.0
@@ -127,24 +155,32 @@ releases:
   - name: cnpg-barman-cloud
     namespace: cnpg-system
     chart: cnpg/plugin-barman-cloud
-    version: 0.7.0
+    version: 0.8.0
     needs:
       - cnpg-system/cnpg
       - cert-manager/cert-manager
 
+  - name: local-path-provisioner
+    installed: false
+    namespace: kube-system
+    chart: containeroo/local-path-provisioner
+    version: 0.0.38
+
   - name: hcloud-ccm
     namespace: kube-system
     chart: hcloud/hcloud-cloud-controller-manager
-    version: 1.35.0
+    version: 1.37.0
     values:
       - values/hcloud-ccm.yaml
 
   - name: hcloud-csi
+    installed: false
     namespace: kube-system
     chart: hcloud/hcloud-csi
     version: 2.22.0
 
   - name: keda
+    installed: false
     namespace: keda
     chart: kedacore/keda
     version: 2.20.2
@@ -155,6 +191,7 @@ releases:
       - values/keda.yaml
 
   - name: keda-http
+    installed: false
     namespace: keda
     chart: kedacore/keda-add-ons-http
     version: 0.15.0

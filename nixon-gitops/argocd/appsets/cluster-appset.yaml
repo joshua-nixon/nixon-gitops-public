@@ -16,14 +16,14 @@ spec:
               repoURL: https://github.com/joshua-nixon/nixon-gitops.git
               revision: main
               files:
-                - path: "argocd/workloads/cluster.yaml"
+                - path: "argocd/workloads/cluster-workload.yaml"
           - list:
-              elementsYaml: "{{ .components | toJson }}"
+              elementsYaml: "{{ .applications | toJson }}"
   template:
     metadata:
       name: "{{ .name }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-cronjob;/charts/nixon-monitoring-resources;/charts/nixon-library;/charts/nixon-cluster-resources;/argocd/workloads/cluster.yaml;/configuration/base/values.yaml;/configuration/cluster/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-cronjob;/argocd/workloads/cluster-workload.yaml;/configuration/base/values.yaml;/configuration/cluster/{{ .name }}.yaml"
     spec:
       project: default
       source:

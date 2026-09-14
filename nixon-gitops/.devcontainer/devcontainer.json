@@ -1,0 +1,27 @@
+{
+  "name": "nixon-gitops",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "root",
+  "postCreateCommand": "sudo /bin/bash .devcontainer/post-create.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/go": {},
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "minikube": "none"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "4ops.terraform",
+        "rhalaly.scope-to-this",
+        "mohsen1.prettify-json",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "donjayamanne.githistory"
+      ]
+    }
+  }
+}

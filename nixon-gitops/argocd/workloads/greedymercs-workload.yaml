@@ -1,0 +1,13 @@
+applications:
+- name: greedymercs-api-monolith
+  chart: charts/nixon-deployable
+  environment: production
+  namespace: greedymercs-production
+- name: greedymercs-website
+  chart: charts/nixon-deployable
+  environment: production
+  namespace: greedymercs-production
+- name: greedymercs-postgresql
+  chart: charts/nixon-cnpg-cluster
+  environment: production
+  namespace: greedymercs-production

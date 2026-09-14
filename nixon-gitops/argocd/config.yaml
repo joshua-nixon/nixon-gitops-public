@@ -1,45 +1,73 @@
-appSetValues:
-  - APPSET_NAME: greedymercs-appset
-    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
-    ARGO_FILE_PATH: argocd/workloads/greedymercs-*.yaml
-    VALUE_FILES:
+applicationSets:
+  greedymercs:
+    applicationNameTemplate: "{{ .name }}-{{ .environment }}"
+    environments:
+      - production
+    valueFiles:
       - /configuration/base/values.yaml
       - /configuration/greedymercs/values.yaml
       - /configuration/greedymercs/{{ .environment }}/{{ .name }}.yaml
+    applications:
+      - name: greedymercs-api-monolith
+      - name: greedymercs-website
+      - name: greedymercs-postgresql
+        chart: charts/nixon-cnpg-cluster
 
-  - APPSET_NAME: tier9-appset
-    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
-    ARGO_FILE_PATH: argocd/workloads/tier9-*.yaml
-    VALUE_FILES:
+  tier9:
+    applicationNameTemplate: "{{ .name }}-{{ .environment }}"
+    environments:
+      - production
+    valueFiles:
       - /configuration/base/values.yaml
       - /configuration/tier9/values.yaml
       - /configuration/tier9/{{ .environment }}/{{ .name }}.yaml
+    applications:
+      - name: tier9-abo-api
+      - name: tier9-abo-slime
+      - name: tier9-abo-worldchat
+      - name: tier9-postgresql
+        chart: charts/nixon-cnpg-cluster
 
-  - APPSET_NAME: untitledproject-appset
-    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
-    ARGO_FILE_PATH: argocd/workloads/untitledproject-*.yaml
-    VALUE_FILES:
+  untitledproject:
+    applicationNameTemplate: "{{ .name }}-{{ .environment }}"
+    environments:
+      - devtest
+    valueFiles:
       - /configuration/base/values.yaml
       - /configuration/untitledproject/values.yaml
       - /configuration/untitledproject/{{ .environment }}/{{ .name }}.yaml
+    applications:
+      - name: untitledproject-api-auth
+      - name: untitledproject-api-monolith
+      - name: untitledproject-postgresql
+        chart: charts/nixon-cnpg-cluster
 
-  - APPSET_NAME: koruxa-appset
-    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
-    ARGO_FILE_PATH: argocd/workloads/koruxa-*.yaml
-    VALUE_FILES:
+  koruxa:
+    applicationNameTemplate: "{{ .name }}-{{ .environment }}"
+    environments:
+      - production
+    valueFiles:
       - /configuration/base/values.yaml
       - /configuration/koruxa/{{ .environment }}/{{ .name }}.yaml
+    applications:
+      - name: koruxa-discordbot
 
-  - APPSET_NAME: cluster-appset
-    NAME_TEMPLATE: "{{ .name }}"
-    ARGO_FILE_PATH: argocd/workloads/cluster.yaml
-    VALUE_FILES:
-      - /configuration/base/values.yaml
-      - /configuration/cluster/{{ .name }}.yaml
-
-  - APPSET_NAME: hedgehogscorner-appset
-    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
-    ARGO_FILE_PATH: argocd/workloads/hedgehogscorner-*.yaml
-    VALUE_FILES:
+  hedgehogscorner:
+    applicationNameTemplate: "{{ .name }}-{{ .environment }}"
+    environments:
+      - production
+    valueFiles:
       - /configuration/base/values.yaml
       - /configuration/hedgehogscorner/{{ .environment }}/{{ .name }}.yaml
+    applications:
+      - name: hedgehogscorner-website
+
+  cluster:
+    applicationNameTemplate: "{{ .name }}"
+    valueFiles:
+      - /configuration/base/values.yaml
+      - /configuration/cluster/{{ .name }}.yaml
+    applications:
+      - name: helm-release-checker
+        chart: charts/nixon-cronjob
+        namespace: default

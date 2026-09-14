@@ -16,14 +16,14 @@ spec:
               repoURL: https://github.com/joshua-nixon/nixon-gitops.git
               revision: main
               files:
-                - path: "argocd/workloads/greedymercs-*.yaml"
+                - path: "argocd/workloads/greedymercs-workload.yaml"
           - list:
-              elementsYaml: "{{ .components | toJson }}"
+              elementsYaml: "{{ .applications | toJson }}"
   template:
     metadata:
       name: "{{ .name }}-{{ .environment }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/greedymercs-*.yaml;/configuration/base/values.yaml;/configuration/greedymercs/values.yaml;/configuration/greedymercs/{{ .environment }}/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/greedymercs-workload.yaml;/configuration/base/values.yaml;/configuration/greedymercs/values.yaml;/configuration/greedymercs/{{ .environment }}/{{ .name }}.yaml"
     spec:
       project: default
       source:

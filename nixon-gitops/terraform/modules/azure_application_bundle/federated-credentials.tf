@@ -1,10 +1,10 @@
 locals {
   federated_credential_list = flatten([
-    for credential in var.federated_credentials : credential.kubernetes_namespace != null ? [
-      for serviceaccount in credential.kubernetes_namespace.serviceaccounts : {
-        key     = format("kubernetes-%s-%s", credential.kubernetes_namespace.namespace, serviceaccount)
-        subject = format("system:serviceaccount:%s:%s", credential.kubernetes_namespace.namespace, serviceaccount)
-        issuer  = coalesce(credential.kubernetes_namespace.issuer, var.cluster_issuer)
+    for credential in var.federated_credentials : credential.serviceaccounts != null ? [
+      for account in credential.serviceaccounts.accounts : {
+        key     = format("kubernetes-%s-%s", account.namespace, account.name)
+        subject = format("system:serviceaccount:%s:%s", account.namespace, account.name)
+        issuer  = credential.serviceaccounts.issuer
       }
       ] : credential.subject_identifier != null ? [
       {
@@ -14,24 +14,24 @@ locals {
       }
       ] : [
       for branch in credential.github.branches : {
-        key     = format("github-%s-%s-%s", credential.github.organisation, credential.github.repository, branch)
+        key = format("github-%s-%s-%s", credential.github.organisation, credential.github.repository, branch)
         subject = format(
-          "repo:%s@%s/%s@%s:ref:refs/heads/%s", 
-          credential.github.organisation, 
+          "repo:%s@%s/%s@%s:ref:refs/heads/%s",
+          credential.github.organisation,
           credential.github.organisation_id,
-          credential.github.repository, 
+          credential.github.repository,
           credential.github.repository_id,
           branch
         )
-        issuer  = "https://token.actions.githubusercontent.com"
+        issuer = "https://token.actions.githubusercontent.com"
       }
     ]
   ])
 
   federated_credential_map = {
     for item in local.federated_credential_list : item.key => {
-      subject   = item.subject
-      issuer    = item.issuer
+      subject = item.subject
+      issuer  = item.issuer
     }
   }
 }

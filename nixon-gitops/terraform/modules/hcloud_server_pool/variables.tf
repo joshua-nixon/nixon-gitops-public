@@ -3,26 +3,16 @@ variable "name" {
   default = null
 }
 
-variable "ipv4_enabled" {
-  type    = bool
-  default = true
-}
-
 variable "labels" {
   type    = map(string)
   default = null
-}
-
-variable "ipv6_enabled" {
-  type    = bool
-  default = false
 }
 
 variable "location" {
   type = string
 }
 
-variable "node_type" {
+variable "server_type" {
   type = string
 }
 
@@ -35,19 +25,16 @@ variable "server_count" {
 }
 
 variable "ssh_key_id" {
-  
+  type    = string
+  default = null
 }
 
 variable "firewall_id" {
+  type    = string
   default = null
-
-}
-
-variable "subnet_id" {
-
 }
 
 variable "user_data" {
-  type        = string
-  default     = null
+  type    = string
+  default = null
 }

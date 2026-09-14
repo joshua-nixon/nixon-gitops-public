@@ -1,0 +1,4 @@
+applications:
+- name: helm-release-checker
+  chart: charts/nixon-cronjob
+  namespace: default

@@ -1,11 +1,8 @@
 nameOverride: untitledproject-api-auth
 
-image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:develop-20260819-192452-9748b1a-03663"
+image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:develop-20260906-152309-ff8705b-00929"
 
 dotNetEnvironment: DevTest
-
-interceptorRoute:
-  enabled: true
 
 containerPorts:
   http:

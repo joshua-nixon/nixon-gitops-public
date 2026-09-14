@@ -1,11 +1,8 @@
 nameOverride: untitledproject-api-monolith
 
-image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.monolith:develop-20260819-211255-3d3398a-03061"
+image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.monolith:develop-20260906-152309-ff8705b-03302"
 
 dotNetEnvironment: DevTest
-
-interceptorRoute:
-  enabled: true
 
 containerPorts:
   http:

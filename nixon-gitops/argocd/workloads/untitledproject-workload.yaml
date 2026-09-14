@@ -1,0 +1,13 @@
+applications:
+- name: untitledproject-api-auth
+  chart: charts/nixon-deployable
+  environment: devtest
+  namespace: untitledproject-devtest
+- name: untitledproject-api-monolith
+  chart: charts/nixon-deployable
+  environment: devtest
+  namespace: untitledproject-devtest
+- name: untitledproject-postgresql
+  chart: charts/nixon-cnpg-cluster
+  environment: devtest
+  namespace: untitledproject-devtest

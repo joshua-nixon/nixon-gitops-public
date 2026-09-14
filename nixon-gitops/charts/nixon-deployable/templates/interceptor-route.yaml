@@ -1,4 +1,4 @@
-{{- if .Values.interceptorRoute.enabled }}
+{{- if .Values.scaledObject.enabled }}
 apiVersion: http.keda.sh/v1beta1
 kind: InterceptorRoute
 metadata:

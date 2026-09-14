@@ -1,0 +1,5 @@
+applications:
+- name: hedgehogscorner-website
+  chart: charts/nixon-deployable
+  environment: production
+  namespace: hedgehogscorner-production

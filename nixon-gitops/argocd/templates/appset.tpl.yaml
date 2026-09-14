@@ -18,7 +18,7 @@ spec:
               files:
                 - path: "$(ARGO_FILE_PATH)"
           - list:
-              elementsYaml: "{{ .components | toJson }}"
+              elementsYaml: "{{ .applications | toJson }}"
   template:
     metadata:
       name: "$(NAME_TEMPLATE)"

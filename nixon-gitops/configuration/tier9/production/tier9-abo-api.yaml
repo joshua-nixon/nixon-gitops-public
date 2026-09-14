@@ -4,9 +4,6 @@ image: "sharedpersonalcontaineregistry.azurecr.io/abo.api:master-20260820-175617
 
 dotNetEnvironment: Production
 
-interceptorRoute:
-  enabled: true
-
 resources:
   requests:
     memory: 40Mi

@@ -13,7 +13,9 @@ nixon-gitops/.git
 nixon-gitops/configuration/**/*-postgresql.yaml
 nixon-gitops/configuration/base/values.yaml
 
-nixon-gitops/terraform/**/vars.auto.tfvars
-nixon-gitops/terraform/**/*.tfstate
-nixon-gitops/terraform/**/*.tfstate.backup
-nixon-gitops/terraform/**/.terraform.lock.hcl
+### TERRAFORM ###
+
+**/vars.auto.tfvars
+**/*.tfstate
+**/*.tfstate.backup
+**/.terraform.lock.hcl
