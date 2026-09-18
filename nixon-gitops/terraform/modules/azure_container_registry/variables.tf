@@ -10,11 +10,6 @@ variable "location" {
   type = string
 }
 
-variable "tags" {
-  type    = map(string)
-  default = {}
-}
-
 variable "purge_older_than_days" {
   type    = number
   default = 30

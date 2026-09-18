@@ -1,5 +1,6 @@
-- name: Process initial node setup
-  hosts: server
+- name: Run 'Controlplanes'
+  hosts: controlplane
   become: true
+  serial: 1
   roles:
-    - netbird-client
+    - role: k3s-node

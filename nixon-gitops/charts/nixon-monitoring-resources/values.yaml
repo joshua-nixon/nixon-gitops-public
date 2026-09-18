@@ -1,3 +1,0 @@
-netbirdNetworkResources:
-  - name: kube-prometheus-stack-grafana
-  - name: kube-prometheus-stack-prometheus

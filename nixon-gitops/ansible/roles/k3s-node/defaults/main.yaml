@@ -1,8 +1,4 @@
-k3s_installer_url: "https://get.k3s.io"
-
 k3s_installer_path: "/tmp/k3s-installer.sh"
-
-k3s_version: "v1.36.4+k3s1"
 
 k3s_binary_path: "/tmp/k3s-binary-{{ k3s_version }}"
 
@@ -10,14 +6,4 @@ k3s_binary_url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version 
 
 k3s_binary_install_path: "/usr/local/bin/k3s"
 
-k3s_common_install_args:
-  - "--flannel-iface=wt0"
-  - "--kubelet-arg=kube-reserved=cpu=200m,memory=300Mi,ephemeral-storage=5Gi"
-  - "--kubelet-arg=system-reserved=cpu=200m,memory=300Mi,ephemeral-storage=5Gi"
-
-k3s_controlplane_install_args:
-  - "--disable-cloud-controller"
-  - "--disable traefik"
-  - "--write-kubeconfig-mode 644"
-  - "--kubelet-arg=cloud-provider=external"
-  - "--node-taint=node-role.kubernetes.io/control-plane=:PreferNoSchedule"
+k3s_config_path: "/etc/rancher/k3s/config.yaml"

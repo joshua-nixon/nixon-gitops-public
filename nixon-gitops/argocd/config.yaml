@@ -28,29 +28,29 @@ applicationSets:
       - name: tier9-postgresql
         chart: charts/nixon-cnpg-cluster
 
-  untitledproject:
-    applicationNameTemplate: "{{ .name }}-{{ .environment }}"
-    environments:
-      - devtest
-    valueFiles:
-      - /configuration/base/values.yaml
-      - /configuration/untitledproject/values.yaml
-      - /configuration/untitledproject/{{ .environment }}/{{ .name }}.yaml
-    applications:
-      - name: untitledproject-api-auth
-      - name: untitledproject-api-monolith
-      - name: untitledproject-postgresql
-        chart: charts/nixon-cnpg-cluster
+  # untitledproject:
+  #   applicationNameTemplate: "{{ .name }}-{{ .environment }}"
+  #   environments:
+  #     - devtest
+  #   valueFiles:
+  #     - /configuration/base/values.yaml
+  #     - /configuration/untitledproject/values.yaml
+  #     - /configuration/untitledproject/{{ .environment }}/{{ .name }}.yaml
+  #   applications:
+  #     - name: untitledproject-api-auth
+  #     - name: untitledproject-api-monolith
+  #     - name: untitledproject-postgresql
+  #       chart: charts/nixon-cnpg-cluster
 
-  koruxa:
-    applicationNameTemplate: "{{ .name }}-{{ .environment }}"
-    environments:
-      - production
-    valueFiles:
-      - /configuration/base/values.yaml
-      - /configuration/koruxa/{{ .environment }}/{{ .name }}.yaml
-    applications:
-      - name: koruxa-discordbot
+  # koruxa:
+  #   applicationNameTemplate: "{{ .name }}-{{ .environment }}"
+  #   environments:
+  #     - production
+  #   valueFiles:
+  #     - /configuration/base/values.yaml
+  #     - /configuration/koruxa/{{ .environment }}/{{ .name }}.yaml
+  #   applications:
+  #     - name: koruxa-discordbot
 
   hedgehogscorner:
     applicationNameTemplate: "{{ .name }}-{{ .environment }}"

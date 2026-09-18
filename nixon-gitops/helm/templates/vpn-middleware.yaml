@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: vpn-middleware
+  namespace: traefik
+  labels:
+    custom.kubernetes.io/is-adhoc: "true"
+    app.kubernetes.io/managed-by: "Helmfile-Hook"
+spec:
+  ipAllowList:
+    ipStrategy:
+      depth: 1
+    sourceRange:
+      - "${IPV4}"

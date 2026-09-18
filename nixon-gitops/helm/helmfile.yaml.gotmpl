@@ -1,0 +1,254 @@
+repositories:
+  - name: hcloud
+    url: https://charts.hetzner.cloud
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: argo
+    url: https://argoproj.github.io/argo-helm
+  - name: cnpg
+    url: https://cloudnative-pg.github.io/charts
+  - name: external-secrets
+    url: https://charts.external-secrets.io
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+  - name: traefik
+    url: https://traefik.github.io/charts
+  - name: kedacore
+    url: https://kedacore.github.io/charts
+  - name: containeroo
+    url: https://charts.containeroo.ch
+
+helmDefaults:
+  historyMax: 1
+  kubeContext: default
+
+releases:
+
+  ###########
+  # NETBIRD #
+  ###########
+
+  - name: netbird-operator
+    namespace: netbird
+    installed: true
+    chart: oci://ghcr.io/netbirdio/helm-charts/netbird-operator
+    version: 0.8.0
+    values:
+      - values/netbird-operator.yaml
+    needs:
+      - cert-manager/cert-manager
+
+  - name: nixon-netbird-resources
+    namespace: netbird
+    chart: ../charts/nixon-netbird-resources
+    needs:
+      - netbird/netbird-operator
+      - external-secrets/nixon-external-secrets-resources
+    values:
+      - ../configuration/base/values.yaml
+
+  ####################
+  # EXTERNAL SECRETS #
+  ####################
+
+  - name: external-secrets
+    namespace: external-secrets
+    chart: external-secrets/external-secrets
+    version: 2.10.0
+    values:
+      - values/external-secrets.yaml
+    needs:
+      - cert-manager/cert-manager
+
+  - name: nixon-external-secrets-resources
+    namespace: external-secrets
+    chart: ../charts/nixon-external-secrets-resources
+    needs:
+      - external-secrets/external-secrets
+
+  ###########
+  # ARGOCD #
+  ##########
+
+  - name: argocd
+    namespace: argocd
+    chart: argo/argo-cd
+    version: 10.9.0
+    values:
+      - values/argocd.yaml
+
+  - name: nixon-argocd-resources
+    namespace: argocd
+    chart: ../charts/nixon-argocd-resources
+    values:
+      - ../configuration/base/values.yaml
+    needs:
+      - argocd/argocd
+      - netbird/nixon-netbird-resources
+      - external-secrets/nixon-external-secrets-resources
+
+  ###############
+  # MONITORING #
+  ###############
+
+  - name: kube-prometheus-stack
+    namespace: monitoring
+    chart: prometheus-community/kube-prometheus-stack
+    version: 88.5.4
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "label"
+          - "namespace"
+          - "monitoring"
+          - "pod-security.kubernetes.io/enforce=privileged"
+          - "--overwrite"
+    values:
+      - values/kube-prometheus-stack.yaml
+
+  - name: loki
+    installed: false
+    namespace: monitoring
+    chart: grafana/loki
+    version: 7.3.0
+    values:
+      - values/loki.yaml
+
+  - name: alloy
+    installed: false
+    namespace: monitoring
+    chart: grafana/alloy
+    version: 1.12.0
+    values:
+      - values/alloy.yaml
+
+  #########
+  # CNPG #
+  #########
+
+  - name: cnpg
+    namespace: cnpg-system
+    chart: cnpg/cloudnative-pg
+    version: 0.29.0
+    needs:
+      - cert-manager/cert-manager
+  
+  - name: cnpg-barman-cloud
+    namespace: cnpg-system
+    chart: cnpg/plugin-barman-cloud
+    version: 0.8.0
+    needs:
+      - cnpg-system/cnpg
+      - cert-manager/cert-manager
+
+
+  ###########
+  # HETZNER #
+  ###########
+
+  - name: hcloud-ccm
+    namespace: kube-system
+    chart: hcloud/hcloud-cloud-controller-manager
+    version: 1.37.0
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "bash"
+        args:
+          - "hooks/create-hcloud-secret.sh"
+          - "{{`{{ .Release.KubeContext }}`}}"
+    values:
+      - values/hcloud-ccm.yaml
+
+  - name: hcloud-csi
+    installed: false
+    namespace: kube-system
+    chart: hcloud/hcloud-csi
+    version: 2.22.0
+
+  ########
+  # KEDA #
+  ########
+
+  - name: keda
+    installed: false
+    namespace: keda
+    chart: kedacore/keda
+    version: 2.20.2
+    needs:
+      - cert-manager/cert-manager
+      - monitoring/kube-prometheus-stack
+    values:
+      - values/keda.yaml
+
+  - name: keda-http
+    installed: false
+    namespace: keda
+    chart: kedacore/keda-add-ons-http
+    version: 0.15.0
+    needs:
+      - keda/keda
+    values:
+      - values/keda-http.yaml
+
+  #####################
+  # INGRESS / GATEWAY #
+  #####################
+
+  - name: traefik
+    namespace: traefik
+    chart: traefik/traefik
+    version: 41.3.0
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "bash"
+        args:
+          - "hooks/create-traefik-middleware.sh"
+          - "{{`{{ .Release.KubeContext }}`}}"
+    needs:
+      - monitoring/kube-prometheus-stack
+    values:
+      - values/traefik.yaml
+
+  #####################
+
+  - name: nixon-cluster-resources
+    namespace: default
+    chart: ../charts/nixon-cluster-resources
+    values:
+      - ../configuration/base/values.yaml
+    needs:
+      - cert-manager/cert-manager
+      - external-secrets/external-secrets
+
+  - name: cert-manager
+    namespace: cert-manager
+    chart: jetstack/cert-manager
+    version: v1.21.0
+    values:
+      - values/cert-manager.yaml
+    needs:
+      - monitoring/kube-prometheus-stack
+
+  - name: local-path-provisioner
+    installed: false
+    namespace: local-path-provisioner
+    chart: containeroo/local-path-provisioner
+    version: 0.0.38
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "label"
+          - "namespace"
+          - "local-path-provisioner"
+          - "pod-security.kubernetes.io/enforce=privileged"
+          - "--overwrite"
+    values:
+      - values/local-path-provisioner.yaml

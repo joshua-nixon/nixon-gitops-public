@@ -10,3 +10,7 @@ externalObjectStore:
   enabled: false
 
 databaseRoles: []
+
+storage:
+  storageClass: local-path
+  size: 10Gi

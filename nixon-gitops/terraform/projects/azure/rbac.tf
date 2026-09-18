@@ -1,19 +1,20 @@
 locals {
   rbac_scopes = {
-    container_registries = { for name, registry in module.container_registries : name => registry.id }
-    key_vaults           = { for name, vault in module.key_vaults : name => vault.id }
-    storage_accounts     = { for name, account in azurerm_storage_account.default : name => account.id }
+    container_registry = { for name, registry in module.container_registries : name => registry.id }
+    keyvault           = { for name, vault in module.keyvault : name => vault.id }
+    storageaccount     = { for name, account in module.azure_storageaccount : name => account.id }
   }
 
   rbac_principals = merge(
-    { for name, application in module.application_bundles : name => application.service_principal_object_id },
-    { for name, group in azuread_group.default : name => group.object_id }
+    { for name, application in module.azure_application : name => application.service_principal_object_id },
+    { for name, group in azuread_group.default : name => group.object_id },
+    { for name, identity in module.user_assigned_identity : name => identity.principal_id }
   )
 
   rbac_resource_configs = {
-    container_registries = var.azure_container_registries
-    key_vaults           = var.azure_key_vaults
-    storage_accounts     = var.azure_storage_accounts
+    container_registry = var.container_registries
+    keyvault           = var.keyvaults
+    storageaccount     = var.storage_accounts
   }
 
   azure_rbac_assignments_by_key = merge(flatten([

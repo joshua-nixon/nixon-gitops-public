@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SRC_REGISTRY="k3sclustersharedvault.azurecr.io"
-DST_REGISTRY="tier9privatekeyvault.azurecr.io"
+SRC_REGISTRY="containerregistry.azurecr.io"
+DST_REGISTRY="containerregistry.azurecr.io"
 
 SRC_REGISTRY_ID=$(az acr show --name "$SRC_REGISTRY" --query id --output tsv)
 

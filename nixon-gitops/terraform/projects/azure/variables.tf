@@ -1,19 +1,27 @@
 
-variable "azure_resource_groups" {
+variable "resource_groups" {
   type = list(object({
     name = string
   }))
 }
 
-variable "azure_subscription_id" {
+variable "subscription_id" {
   type = string
 }
 
-variable "azure_tenant_id" {
+variable "tenant_id" {
   type = string
 }
 
-variable "azure_key_vaults" {
+variable "monthly_budget" {
+  type = object({
+    amount         = number
+    contact_emails = list(string)
+    start_date     = string
+  })
+}
+
+variable "keyvaults" {
   type = list(object({
     name                  = string
     resource_group_name   = string
@@ -21,7 +29,7 @@ variable "azure_key_vaults" {
   }))
 }
 
-variable "azure_container_registries" {
+variable "container_registries" {
   type = list(object({
     name                  = string
     resource_group_name   = string
@@ -29,7 +37,7 @@ variable "azure_container_registries" {
   }))
 }
 
-variable "azure_storage_accounts" {
+variable "storage_accounts" {
   type = list(object({
     name                  = string
     resource_group_name   = string
@@ -37,12 +45,7 @@ variable "azure_storage_accounts" {
   }))
 }
 
-variable "azure_common_labels" {
-  type    = map(string)
-  default = {}
-}
-
-variable "azure_applications" {
+variable "applications" {
   type = list(object({
     name                    = string
     redirect_url            = optional(string)
@@ -59,23 +62,54 @@ variable "azure_applications" {
         }))
       }))
 
-      github = optional(object({
-        organisation    = string
-        organisation_id = number
-        repository      = string
-        repository_id   = number
-        branches        = list(string)
+      github_organization = optional(object({
+        id   = number
+        name = string
+        repositories = list(object({
+          id       = number
+          name     = string
+          branches = list(string)
+        }))
       }))
     })), [])
   }))
   default = []
 }
 
-variable "azure_groups" {
+variable "user_groups" {
   type = map(object({
     member_emails = list(string)
     display_name  = optional(string)
     mail_nickname = optional(string)
   }))
   default = {}
+}
+
+variable "user_identities" {
+  type = list(object({
+    name                = string
+    resource_group_name = string
+    federated_credentials = optional(list(object({
+      subject_identifier = optional(string)
+      issuer             = optional(string)
+      serviceaccounts = optional(object({
+        issuer = string
+        accounts = list(object({
+          name      = string
+          namespace = string
+        }))
+      }))
+
+      github_organization = optional(object({
+        id   = number
+        name = string
+        repositories = list(object({
+          id       = number
+          name     = string
+          branches = list(string)
+        }))
+      }))
+    })), [])
+  }))
+  default = []
 }

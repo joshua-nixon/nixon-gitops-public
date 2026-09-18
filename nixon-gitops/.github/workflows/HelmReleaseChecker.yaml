@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   build:
-    uses: joshua-nixon/shared-workflows/.github/workflows/Template.Docker.BuildPush.yaml@v1.12
+    uses: joshua-nixon/shared-workflows/.github/workflows/Template.Docker.BuildPush.yaml@v1.13
     with:
       azure-client-id: ${{ vars.AZURE_CLIENT_ID }}
       azure-tenant-id: ${{ vars.AZURE_TENANT_ID }}

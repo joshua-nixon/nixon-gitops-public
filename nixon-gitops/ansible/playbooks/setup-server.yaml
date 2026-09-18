@@ -1,5 +1,0 @@
-- name: Process Servers
-  hosts: all
-  become: true
-  roles:
-    - server

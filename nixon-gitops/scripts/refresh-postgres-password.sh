@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-CONTEXT="k3s-cluster-admin"
+CONTEXT="default"
 
 ENVIRONMENTS=(
-    "untitledproject:devtest"
+    "tier9:production"
 )
 
 for entry in "${ENVIRONMENTS[@]}"; do

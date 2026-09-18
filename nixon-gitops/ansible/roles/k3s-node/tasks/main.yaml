@@ -14,7 +14,7 @@
 
 - name: Download k3s install script
   ansible.builtin.get_url:
-    url: "{{ k3s_installer_url }}"
+    url: "https://get.k3s.io"
     dest: "{{ k3s_installer_path }}"
     mode: "0755"
     force: false
@@ -46,7 +46,7 @@
       ansible.builtin.set_fact:
         controlplane_host: "{{ item }}"
       loop: "{{ groups['controlplane'] }}"
-      when: hostvars[item]['is_cluster_initialiser'] | default(false) | bool
+      when: hostvars[item]['is_cluster_init'] | default(false) | bool
 
     - name: Set controlplane_host fallback
       ansible.builtin.set_fact:
@@ -66,14 +66,14 @@
 
 - name: Set k3s_url fact
   ansible.builtin.set_fact:
-    k3s_url: "https://{{ controlplane_host }}:6443"
+    k3s_url: "https://{{ hostvars[controlplane_host]['ansible_facts']['wt0']['ipv4']['address'] }}:6443"
 
   # The cluster token is needed for all nodes, besides the node which is
   # used to init the cluster itself.
   # The controlplane_host is created above.
 
 - name: Fetch k3s_token
-  when: not (is_cluster_initialiser | default(false) | bool)
+  when: not (is_cluster_init | default(false) | bool)
   block:
     - name: Fetch k3s_token
       ansible.builtin.slurp:
@@ -116,6 +116,12 @@
           - netbird_ipv4 != 'UNDEFINED'
         fail_msg: "NetBird interface (wt0) is missing or disconnected."
 
+- name: Ensure control plane K3s configuration directory exists
+  ansible.builtin.file:
+    path: "{{ k3s_config_path | dirname }}"
+    state: directory
+    mode: "0755"
+
   # Include the relevant node type task
 
 - name: Include 'controlplane.yaml'
@@ -125,24 +131,3 @@
 - name: Include 'agent.yaml'
   include_tasks: agent.yaml
   when: node_type == 'agent'
-
-  # Executes the generates install command
-  # We log and writes the install command to file so its easier to debug
-  # The file itself hold no value in the installation process.
-
-- name: Execute k3s install
-  when: k3s_install_command is defined
-  block:
-    - name: Execute the k3s install command
-      ansible.builtin.shell: "{{ k3s_install_command }}"
-      register: k3s_install_output
-      changed_when: true
-
-    - name: Debug the k3s install output
-      ansible.builtin.debug:
-        var: k3s_install_output.stdout_lines
-
-    - name: Write install command to a file
-      ansible.builtin.copy:
-        content: "{{ k3s_install_command }}"
-        dest: /tmp/k3s-install-command

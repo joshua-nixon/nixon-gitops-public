@@ -3,7 +3,6 @@ nixon-gitops/ansible/inventory.ini
 
 nixon-gitops/helm/values
 
-nixon-gitops/charts/nixon-ingress-resources
 nixon-gitops/charts/nixon-external-secrets-resources/values.yaml
 
 nixon-gitops/.gitattributes
@@ -11,11 +10,9 @@ nixon-gitops/.gitignore
 nixon-gitops/.git
 
 nixon-gitops/configuration/**/*-postgresql.yaml
-nixon-gitops/configuration/base/values.yaml
 
 ### TERRAFORM ###
 
+**/setup-backend.sh
 **/vars.auto.tfvars
-**/*.tfstate
-**/*.tfstate.backup
 **/.terraform.lock.hcl

@@ -16,7 +16,7 @@ spec:
   serviceAccountTemplate:
     metadata:
       annotations:
-        azure.workload.identity/client-id: {{ .Values.azureCredential.clientId | quote }}
+        azure.workload.identity/client-id: {{ .Values.azureClientId | quote }}
       labels:
         azure.workload.identity/use: "true"
 
@@ -80,5 +80,5 @@ spec:
 {{- end }}
 
   storage:
-    storageClass: local-path
-    size: 1Gi
+    storageClass: {{ .Values.storage.storageClass | quote }}
+    size: {{ .Values.storage.size | quote }}

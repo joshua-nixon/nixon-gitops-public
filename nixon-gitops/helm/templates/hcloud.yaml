@@ -1,0 +1,20 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: hcloud
+  namespace: kube-system
+  labels:
+    custom.kubernetes.io/is-adhoc: "true"
+    app.kubernetes.io/managed-by: "Helmfile-Hook"
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    name: cluster-secretstore
+    kind: ClusterSecretStore
+  target:
+    name: hcloud
+    creationPolicy: Owner
+  data:
+    - secretKey: token
+      remoteRef:
+        key: HCLOUD-TOKEN

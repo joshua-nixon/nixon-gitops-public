@@ -12,7 +12,7 @@ locals {
   }
 
   firewall_rules = flatten([
-    for rule in var.firewall_rules : [
+    for rule in var.firewall.rules : [
       for group in rule.groups : {
         description = "${rule.description} (@${title(group)})"
         protocol    = rule.protocol
@@ -41,5 +41,5 @@ resource "hcloud_firewall" "this" {
 
 resource "hcloud_firewall_attachment" "fw_servers" {
   firewall_id     = hcloud_firewall.this.id
-  label_selectors = [for s in local.server_pools : "server-pool-name=${s.name}"]
+  label_selectors = [var.firewall.label_selector]
 }

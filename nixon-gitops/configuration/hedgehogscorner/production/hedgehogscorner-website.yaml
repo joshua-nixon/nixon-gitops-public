@@ -1,6 +1,6 @@
 nameOverride: hedgehogscorner-website
 
-image: "sharedpersonalcontaineregistry.azurecr.io/hedgehogscorner.website:sha-83aa6d9ea673"
+image: "containerregistry.azurecr.io/hedgehogscorner.website:sha-83aa6d9ea673"
 
 dotNetEnvironment: Production
 

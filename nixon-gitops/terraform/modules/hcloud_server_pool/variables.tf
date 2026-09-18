@@ -35,6 +35,7 @@ variable "firewall_id" {
 }
 
 variable "user_data" {
-  type    = string
-  default = null
+  type      = string
+  default   = null
+  sensitive = true
 }

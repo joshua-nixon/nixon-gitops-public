@@ -1,19 +1,46 @@
-- name: Build exec args
-  ansible.builtin.set_fact:
-    _k3s_exec_args: >-
-      {{[
-        '--cluster-init', 
-        '--tls-san ' + inventory_hostname, 
-        '--tls-san ' + netbird_ipv4,
-        '--node-ip ' + netbird_ipv4,
-        '--node-external-ip ' + inventory_hostname
-      ] + k3s_controlplane_install_args + k3s_common_install_args 
-      }}
+- name: Render control plane K3s configuration
+  ansible.builtin.template:
+    src: controlplane-config.yaml.j2
+    dest: "{{ k3s_config_path }}"
+    mode: "0600"
 
-- name: Build install command
-  ansible.builtin.set_fact:
-    k3s_install_command: 'INSTALL_K3S_SKIP_DOWNLOAD=true INSTALL_K3S_VERSION="{{ k3s_version }}" INSTALL_K3S_EXEC="{{ _k3s_exec_args | join('' '') }}" sh {{ k3s_installer_path }}'
+- name: Execute control plane K3s install
+  ansible.builtin.command: "sh {{ k3s_installer_path }}"
+  environment:
+    INSTALL_K3S_SKIP_DOWNLOAD: "true"
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
+  register: k3s_install_output
+  changed_when: true
 
-- name: Log install command
+- name: Debug control plane K3s install output
   ansible.builtin.debug:
-    var: k3s_install_command
+    var: k3s_install_output.stdout_lines
+
+- name: Ensure local kubeconfig directory exists
+  ansible.builtin.file:
+    path: "{{ k3s_kubeconfig_path | dirname }}"
+    state: directory
+    mode: "0700"
+  delegate_to: localhost
+  become: false
+  when: is_cluster_init | default(false) | bool
+
+- name: Download bootstrap K3s kubeconfig
+  ansible.builtin.fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: "{{ k3s_kubeconfig_path }}"
+    flat: true
+  when: is_cluster_init | default(false) | bool
+
+- name: Set bootstrap kubeconfig API server to NetBird
+  ansible.builtin.replace:
+    path: "{{ k3s_kubeconfig_path }}"
+    regexp: '^(\s*server:\s*)https://[^\s]+$'
+    replace: '\g<1>https://{{ netbird_ipv4 }}:6443'
+  delegate_to: localhost
+  become: false
+
+- name: Restart K3s service
+  ansible.builtin.systemd_service:
+    name: k3s
+    state: restarted

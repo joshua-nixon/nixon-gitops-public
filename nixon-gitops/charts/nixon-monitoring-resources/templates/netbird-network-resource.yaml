@@ -1,9 +1,0 @@
-{{- range $resource := .Values.netbirdNetworkResources }}
----
-{{ include "nixon-library.networkResource" (dict 
-  "name" $resource.name 
-  "namespace" $.Release.Namespace
-  "router" $.Values.netbirdNetworkRoute
-  "labels" (include "nixon-monitoring-resources.labels" $)
-) }}
-{{- end }}

@@ -1,6 +1,6 @@
 nameOverride: tier9-abo-worldchat
 
-image: "sharedpersonalcontaineregistry.azurecr.io/abo.worldchat:master-20260820-175620-b5ce595b"
+image: "containerregistry.azurecr.io/abo.worldchat:master-20260820-175620-b5ce595b"
 
 dotNetEnvironment: Production
 

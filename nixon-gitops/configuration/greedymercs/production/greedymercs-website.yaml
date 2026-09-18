@@ -1,6 +1,6 @@
 nameOverride: greedymercs-website
 
-image: "sharedpersonalcontaineregistry.azurecr.io/greedymercs.website:sha-a002309b6202"
+image: "containerregistry.azurecr.io/greedymercs.website:sha-a002309b6202"
 
 securityContextPreset: "unset"
 

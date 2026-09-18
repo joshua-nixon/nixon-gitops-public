@@ -2,10 +2,12 @@
 # kind create cluster --name arc-test
 # kubectl config use-context kind-arc-test
 
+kubectl config use-context default
+
 az config set extension.use_dynamic_install=yes_without_prompt
 
 az connectedk8s connect \
-    --name talos-cluster-080926 \
+    --name arc-k3s-cluster \
     --resource-group rg-v1-shared \
     --location uksouth \
     --enable-oidc-issuer \

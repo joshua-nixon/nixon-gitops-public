@@ -1,0 +1,11 @@
+imagePullSecret: image-pull-secret
+
+clusterIssuer: selfsigned-clusterissuer
+
+secretStore:
+  refreshInterval: 24h
+  name: cluster-secretstore
+
+netbirdNetworkRoute:
+  name: default-cluster-router
+  namespace: netbird

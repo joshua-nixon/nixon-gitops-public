@@ -1,6 +1,6 @@
 nameOverride: koruxa-discordbot
 
-image: "sharedpersonalcontaineregistry.azurecr.io/koruxa.discordbot:master-20260802-215036-546c343f"
+image: "containerregistry.azurecr.io/koruxa.discordbot:master-20260802-215036-546c343f"
 
 dotNetEnvironment: Production
 

@@ -1,6 +1,6 @@
 nameOverride: greedymercs-api-monolith
 
-image: "sharedpersonalcontaineregistry.azurecr.io/greedymercs.api.monolith:master-20260801-221848-8be64351"
+image: "containerregistry.azurecr.io/greedymercs.api.monolith:master-20260801-221848-8be64351"
 
 dotNetEnvironment: Production
 

@@ -1,14 +1,18 @@
 data "terraform_remote_state" "hetzer" {
-  backend = "local"
+  backend = "azurerm"
 
   config = {
-    path = "${path.module}/../hetzer/terraform.tfstate"
+    resource_group_name  = "rg-v1-tfstate"
+    storage_account_name = "nixontfstatestorage"
+    container_name       = "tfstate-hetzner"
+    key                  = "tfstate/terraform.tfstate"
+    use_azuread_auth     = true
   }
 }
 
 locals {
   server_ips = [
-    for s in data.terraform_remote_state.hetzer.outputs.servers : s.ipv4_address if s.role == "controlplane"
+    for s in data.terraform_remote_state.hetzer.outputs.servers : s.ipv4_address if s.cluster_role == "controlplane"
   ]
 
   expanded_records = {

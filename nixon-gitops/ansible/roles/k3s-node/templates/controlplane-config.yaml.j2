@@ -1,0 +1,36 @@
+{% if is_cluster_init | default(false) | bool %}
+cluster-init: true
+{% else %}
+server: {{ k3s_url }}
+token: {{ k3s_token }}
+{% endif %}
+
+tls-san:
+  - {{ inventory_hostname }}
+  - {{ netbird_ipv4 }}
+
+node-ip: {{ netbird_ipv4 }}
+
+node-external-ip: {{ inventory_hostname }}
+
+{% if k3s_service_account_issuer | default('') %}
+kube-apiserver-arg:
+  - service-account-issuer={{ k3s_service_account_issuer }}
+  - service-account-max-token-expiration=24h
+{% endif %}
+
+disable-cloud-controller: true
+
+disable:
+  - traefik
+
+write-kubeconfig-mode: "0644"
+
+node-taint:
+  - node-role.kubernetes.io/control-plane=:PreferNoSchedule
+
+flannel-iface: wt0
+
+kubelet-arg:
+  - kube-reserved=cpu=200m,memory=200Mi,ephemeral-storage=5Gi
+  - system-reserved=cpu=200m,memory=200Mi,ephemeral-storage=5Gi

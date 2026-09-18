@@ -1,5 +1,0 @@
-- name: Include 'update-system.yaml'
-  include_tasks: update-system.yaml
-
-- name: Include 'netbird.yaml'
-  include_tasks: netbird.yaml

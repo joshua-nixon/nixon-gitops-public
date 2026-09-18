@@ -1,0 +1,11 @@
+server: {{ k3s_url }}
+
+token: {{ k3s_token }}
+
+node-external-ip: {{ inventory_hostname }}
+
+flannel-iface: wt0
+
+kubelet-arg:
+  - kube-reserved=cpu=200m,memory=200Mi,ephemeral-storage=5Gi
+  - system-reserved=cpu=200m,memory=200Mi,ephemeral-storage=5Gi

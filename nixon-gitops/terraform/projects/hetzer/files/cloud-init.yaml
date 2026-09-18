@@ -21,4 +21,19 @@ write_files:
 
 runcmd:
   - sysctl --system
+
+  - echo "Adding VPN Keyring"
+  - curl -sSL https://pkgs.netbird.io/debian/public.key | sudo gpg --dearmor --output /usr/share/keyrings/netbird-archive-keyring.gpg
+  - echo 'deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main' | sudo tee /etc/apt/sources.list.d/netbird.list
+
+  - echo "Updating System" 
+  - sudo apt-get update
+  - sudo apt-get upgrade -y
+
+  - echo "Installing VPN" 
+  - sudo apt-get install -y netbird
+
+  - echo "Connecting to VPN"
+  - netbird up --setup-key "${netbird_setup_key}" --allow-server-ssh --enable-ssh-root
+
   - echo "cloud-init completed"
