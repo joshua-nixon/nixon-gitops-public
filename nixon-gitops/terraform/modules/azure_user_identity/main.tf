@@ -17,7 +17,7 @@ resource "azurerm_federated_identity_credential" "this" {
 }
 
 module "resource_tags" {
-  source = "../azure_resource_tags"
+  source = "../common_resource_tags"
   update_change_triggers = {
     resource_group_name = var.resource_group_name
   }

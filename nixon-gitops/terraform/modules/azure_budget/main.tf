@@ -9,7 +9,7 @@ resource "azurerm_consumption_budget_subscription" "this" {
   }
 
   dynamic "notification" {
-    for_each = toset([50, 80, 100])
+    for_each = toset([75, 100])
 
     content {
       enabled        = true

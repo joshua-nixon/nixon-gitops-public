@@ -9,8 +9,15 @@ resource "azurerm_key_vault" "this" {
   tags                       = module.resource_tags.all_tags
 }
 
+module "rbac" {
+  source                = "../azure_resource_rbac"
+  scope                 = azurerm_key_vault.this.id
+  role_assignments      = var.rbac_role_assignments
+  rbac_principals       = var.rbac_principals
+}
+
 module "resource_tags" {
-  source = "../azure_resource_tags"
+  source = "../common_resource_tags"
   update_change_triggers = {
     soft_delete_retention_days = var.soft_delete_retention_days
   }

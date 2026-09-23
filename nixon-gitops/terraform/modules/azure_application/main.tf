@@ -27,7 +27,7 @@ resource "azuread_application_password" "this" {
 }
 
 module "resource_tags" {
-  source = "../azure_resource_tags"
+  source = "../common_resource_tags"
   update_change_triggers = {
     display_name            = var.display_name
     redirect_url            = var.redirect_url

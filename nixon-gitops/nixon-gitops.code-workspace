@@ -6,7 +6,11 @@
   ],
   "extensions": {
     "recommendations": [
-      "tim-koehler.helm-intellisense"
+      "4ops.terraform",
+      "mohsen1.prettify-json",
+      "ms-kubernetes-tools.vscode-kubernetes-tools",
+      "donjayamanne.githistory",
+      "Tim-Koehler.helm-intellisense"
     ]
   },
   "settings": {

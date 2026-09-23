@@ -1,32 +1,20 @@
 $ErrorActionPreference = "Stop"
 
 $workspaceRoot      = $PSScriptRoot
+$tempGuid           = [System.Guid]::NewGuid().ToString()
+$tempDir            = Join-Path -Path $workspaceRoot -ChildPath $tempGuid
 $destinationPath    = Join-Path -Path $workspaceRoot -ChildPath "nixon-gitops"
 
 function Get-GitRepository {
-    $tempGuid      = [System.Guid]::NewGuid().ToString()
-    $tempDir       = Join-Path -Path $workspaceRoot -ChildPath $tempGuid
-
     New-Item -ItemType Directory -Path $tempDir | Out-Null
 
-    git clone "https://github.com/nixonjoshua98/nixon-gitops.git" $tempDir
-
-    if (Test-Path -Path $destinationPath) {
-        Remove-Item -Path $destinationPath -Recurse -Force
-    }
-
-    Copy-Item -Path $tempDir -Destination $destinationPath -Recurse -Force
-
-    Remove-Item -Path $tempDir -Recurse -Force
+    git clone "https://github.com/joshua-nixon/nixon-gitops.git" $tempDir
 }
 
 function Remove-ImageRegistry {
     $registryPattern = '(?<![A-Za-z0-9-])[A-Za-z0-9-]+\.azurecr\.io(?![A-Za-z0-9.-])'
 
-    Get-ChildItem -Path $destinationPath -File -Recurse -Force |
-        Where-Object { 
-            $_.FullName -notlike "$destinationPath\.git\*" 
-        } |
+    Get-ChildItem -Path $tempDir -File -Recurse -Force |
         ForEach-Object {
             $content            = [System.IO.File]::ReadAllText($_.FullName)
             $anonymizedContent  = $content -replace $registryPattern, 'containerregistry.azurecr.io'
@@ -37,6 +25,18 @@ function Remove-ImageRegistry {
         }
 }
 
+function Clear-DestinationRepository {
+    Get-ChildItem -LiteralPath $destinationPath -Force |
+        Remove-Item -Recurse -Force
+}
+
 Get-GitRepository
 
 Remove-ImageRegistry
+
+Clear-DestinationRepository
+
+Get-ChildItem -LiteralPath $tempDir -Force |
+    Copy-Item -Destination $destinationPath -Recurse -Force
+
+Remove-Item -Path $tempDir -Recurse -Force

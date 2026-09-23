@@ -11,6 +11,8 @@
 */}}
 {{- define "nixon-library.networkResource" -}}
 
+{{- $enabled := false -}}
+
 {{- $name       := required ".name is required" .name -}}
 {{- $labels     := required ".labels is required" .labels -}}
 {{- $namespace  := required ".namespace is required" .namespace -}}
@@ -19,6 +21,7 @@
 {{- $routerName       := required ".router.name is required" $router.name -}}
 {{- $routerNamespace  := required ".router.namespace is required" $router.namespace -}}
 
+{{- if $enabled -}}
 apiVersion: netbird.io/v1alpha1
 kind: NetworkResource
 metadata:
@@ -34,5 +37,6 @@ spec:
     name: {{ $name | quote }}
   groups:
     - name: All
-    
+{{- end -}}
+
 {{- end -}}

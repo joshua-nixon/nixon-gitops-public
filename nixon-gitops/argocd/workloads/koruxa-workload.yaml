@@ -1,5 +1,0 @@
-applications:
-- name: koruxa-discordbot
-  chart: charts/nixon-deployable
-  environment: production
-  namespace: koruxa-production

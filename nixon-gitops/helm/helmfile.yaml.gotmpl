@@ -32,7 +32,7 @@ releases:
 
   - name: netbird-operator
     namespace: netbird
-    installed: true
+    installed: false
     chart: oci://ghcr.io/netbirdio/helm-charts/netbird-operator
     version: 0.8.0
     values:
@@ -42,6 +42,7 @@ releases:
 
   - name: nixon-netbird-resources
     namespace: netbird
+    installed: false
     chart: ../charts/nixon-netbird-resources
     needs:
       - netbird/netbird-operator

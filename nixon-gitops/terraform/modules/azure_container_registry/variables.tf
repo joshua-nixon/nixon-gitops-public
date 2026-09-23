@@ -19,3 +19,13 @@ variable "purge_retain_count" {
   type    = number
   default = 5
 }
+
+variable "rbac_role_assignments" {
+  type    = map(list(string))
+  default = {}
+}
+
+variable "rbac_principals" {
+  type    = map(string)
+  default = {}
+}

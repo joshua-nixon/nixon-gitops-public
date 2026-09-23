@@ -7,6 +7,13 @@ resource "azurerm_container_registry" "registry" {
   tags                = module.resource_tags.all_tags
 }
 
+module "rbac" {
+  source                = "../azure_resource_rbac"
+  scope                 = azurerm_container_registry.registry.id
+  role_assignments      = var.rbac_role_assignments
+  rbac_principals       = var.rbac_principals
+}
+
 resource "azurerm_container_registry_task" "purge_task" {
   name                  = "purge-task"
   container_registry_id = azurerm_container_registry.registry.id
@@ -33,7 +40,7 @@ resource "azurerm_container_registry_task" "purge_task" {
 }
 
 module "resource_tags" {
-  source = "../azure_resource_tags"
+  source = "../common_resource_tags"
   update_change_triggers = {
     purge_older_than_days = var.purge_older_than_days
     purge_retain_count    = var.purge_retain_count
