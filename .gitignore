@@ -1,15 +1,23 @@
 
-nixon-gitops/ansible/inventory.ini
-
-nixon-gitops/helm/values
-
-nixon-gitops/charts/nixon-external-secrets-resources/values.yaml
+### GIT ###
 
 nixon-gitops/.gitattributes
 nixon-gitops/.gitignore
 nixon-gitops/.git
 
+### CONFIGURATION ###
+
+**/helm/values/argocd.yaml
+**/helm/values/traefik.yaml
+**/helm/values/kube-prometheus-stack.yaml
+
 nixon-gitops/configuration/**/*-postgresql.yaml
+
+nixon-gitops/charts/nixon-external-secrets-resources/values.yaml
+
+### SCRIPTS ###
+
+**/scripts/k3sup-*.sh
 
 ### TERRAFORM ###
 

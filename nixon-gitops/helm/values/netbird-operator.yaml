@@ -1,0 +1,4 @@
+netbirdAPI:
+  keyFromSecret:
+    name: netbird-credential
+    key: ACCESS_TOKEN

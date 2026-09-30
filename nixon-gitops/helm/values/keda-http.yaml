@@ -1,0 +1,7 @@
+scaler:
+  replicas: 1
+
+interceptor:
+  replicas:
+    min: 1
+    max: 1

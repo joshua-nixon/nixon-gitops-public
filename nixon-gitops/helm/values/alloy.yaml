@@ -1,0 +1,36 @@
+alloy:
+  configMap:
+    content: |
+      discovery.kubernetes "pods" {
+        role = "pod"
+      }
+
+      discovery.relabel "pods" {
+        targets = discovery.kubernetes.pods.targets
+        rule {
+          action        = "replace"
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+        rule {
+          action        = "replace"
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+        rule {
+          action        = "replace"
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container_name"
+        }
+      }
+
+      loki.source.kubernetes "pod_logs" {
+        targets    = discovery.relabel.pods.output
+        forward_to = [loki.write.endpoint.receiver]
+      }
+
+      loki.write "endpoint" {
+        endpoint {
+          url = "http://loki:3100/loki/api/v1/push"
+        }
+      }

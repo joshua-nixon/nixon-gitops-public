@@ -1,9 +1,0 @@
-k3s_installer_path: "/tmp/k3s-installer.sh"
-
-k3s_binary_path: "/tmp/k3s-binary-{{ k3s_version }}"
-
-k3s_binary_url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s"
-
-k3s_binary_install_path: "/usr/local/bin/k3s"
-
-k3s_config_path: "/etc/rancher/k3s/config.yaml"
