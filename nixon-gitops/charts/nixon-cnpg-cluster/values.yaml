@@ -1,13 +1,13 @@
 bootstrap:
   mode: recovery
 
-postgresUserPassword: null
-
 objectStore:
   enabled: false
+  destinationPath: ""
 
 externalObjectStore:
   enabled: false
+  destinationPath: ""
 
 databaseRoles: []
 

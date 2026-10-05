@@ -122,8 +122,8 @@ function Get-Applications([string]$applicationSetName, [object]$applicationSet) 
     $environments = @(Get-PropertyValue -object $applicationSet -name 'environments' -defaultValue @())
 
     foreach ($application in @($applicationSet.applications)) {
-        $namespaceOverride = Get-PropertyValue -object $application -name 'namespace'
-        $chart = Get-PropertyValue -object $application -name 'chart' -defaultValue 'charts/nixon-deployable'
+        $namespaceOverride  = Get-PropertyValue -object $application -name 'namespace'
+        $chart              = Get-PropertyValue -object $application -name 'chart' -defaultValue 'charts/nixon-deployable'
 
         if ($environments.Count -eq 0) {
             $applications += [PSCustomObject]@{
@@ -151,8 +151,8 @@ function Render-Template([string]$template, [object]$item) {
     $rendered = $template
 
     foreach ($key in $item.Keys) {
-        $placeholder = '$(' + $key + ')'
-        $value = $item[$key]
+        $placeholder    = '$(' + $key + ')'
+        $value          = $item[$key]
 
         if (($value -is [System.Collections.IEnumerable]) -and ($value -isnot [string])) {
             $value = Render-ArrayValue @($value)
@@ -174,12 +174,12 @@ foreach ($directory in @($appSetsRenderedRoot, $workloadsRenderedRoot)) {
 
 foreach ($applicationSetName in $renderValues.applicationSets.Keys) {
     $applicationSet = $renderValues.applicationSets[$applicationSetName]
-    $applications = @(Get-Applications -applicationSetName $applicationSetName -applicationSet $applicationSet)
-    $valueFiles = @(Get-PropertyValue -object $applicationSet -name 'valueFiles' -defaultValue @())
-    $workload = [PSCustomObject]@{
+    $applications   = @(Get-Applications -applicationSetName $applicationSetName -applicationSet $applicationSet)
+    $valueFiles     = @(Get-PropertyValue -object $applicationSet -name 'valueFiles' -defaultValue @())
+    $workload       = [PSCustomObject]@{
         applications = $applications
     }
-    $workloadPath = "argocd/workloads/$applicationSetName-workload.yaml"
+    $workloadPath       = "argocd/workloads/$applicationSetName-workload.yaml"
     $workloadOutputPath = Join-Path $workloadsRenderedRoot "$applicationSetName-workload.yaml"
 
     [System.IO.File]::WriteAllText($workloadOutputPath, ($workload | ConvertTo-Yaml), [System.Text.UTF8Encoding]::new($false))
@@ -193,7 +193,8 @@ foreach ($applicationSetName in $renderValues.applicationSets.Keys) {
         NAME_TEMPLATE           = $applicationSet.applicationNameTemplate
         VALUE_FILES             = $valueFiles
     }
-    $rendered = Render-Template -template $appsetTemplate -item $item
+    
+    $rendered   = Render-Template -template $appsetTemplate -item $item
     $outputPath = Join-Path $appSetsRenderedRoot "$applicationSetName-appset.yaml"
 
     [System.IO.File]::WriteAllText($outputPath, $rendered, [System.Text.UTF8Encoding]::new($false))

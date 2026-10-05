@@ -1,2 +1,4 @@
 secretStore:
   name: tier9-secretstore
+
+dotNetEnvironment: Production

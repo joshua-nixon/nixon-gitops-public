@@ -1,4 +1,8 @@
 
+`$ apt install etcd-client jq `
+
+`$ k3s server -- etcdctl endpoint status -w table `
+
 # Ports
 
   TCP 6443  - K8S API Server

@@ -39,7 +39,3 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "nixon-cnpg-cluster.userResourceName" -}}
 {{- printf "%s-%s" (include "nixon-cnpg-cluster.name" .root) (replace "_" "-" .name) | trim -}}
 {{- end }}
-
-{{- define "nixon-cnpg-cluster.postgresPasswordSecret" -}}
-{{- printf "%s-postgres" (include "nixon-cnpg-cluster.name" .) | trim -}}
-{{- end }}

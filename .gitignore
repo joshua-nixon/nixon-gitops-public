@@ -17,7 +17,7 @@ nixon-gitops/charts/nixon-external-secrets-resources/values.yaml
 
 ### SCRIPTS ###
 
-**/scripts/k3sup-*.sh
+**/scripts/**/k3s-hetzner.sh
 
 ### TERRAFORM ###
 

@@ -21,7 +21,7 @@ locals {
 
 module "azure_application" {
   for_each                = { for application in var.applications : application.name => application }
-  source                  = "../../modules/azure_application"
+  source                  = "git::https://github.com/joshua-nixon/terraform-modules.git//azure_application?ref=main"
   display_name            = each.value.name
   client_secrets          = each.value.client_secrets
   federated_credentials   = each.value.federated_credentials

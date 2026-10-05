@@ -1,0 +1,6 @@
+storageClasses:
+  - annotations: {}
+    defaultStorageClass: false
+    extraParameters: {}
+    name: hcloud-volumes
+    reclaimPolicy: Delete

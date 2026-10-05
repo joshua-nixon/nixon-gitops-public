@@ -1,5 +1,5 @@
 module "azure_budget" {
-  source          = "../../modules/azure_budget"
+  source          = "git::https://github.com/joshua-nixon/terraform-modules.git//azure_budget?ref=main"
   name            = "monthly-subscription-budget"
   subscription_id = "/subscriptions/${var.subscription_id}"
   amount          = var.monthly_budget.amount

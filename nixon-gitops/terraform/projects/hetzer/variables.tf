@@ -1,10 +1,3 @@
-variable "ssh_keys" {
-  type = list(object({
-    name            = string
-    public_key_path = string
-  }))
-}
-
 variable "server_pools" {
   type = list(object({
     name         = string
@@ -17,16 +10,17 @@ variable "server_pools" {
   default = []
 }
 
-variable "firewall" {
-  type = object({
-    label_selector = string
+variable "firewalls" {
+  type = list(object({
+    name                = string
+    attachment_selector = string
     rules = list(object({
       description = string
       protocol    = string
-      port        = optional(string)
-      groups      = optional(list(string), [])
+      port        = string
     }))
-  })
+  }))
+  default = []
 }
 
 variable "hcloud_token" {
@@ -37,4 +31,8 @@ variable "hcloud_token" {
 variable "netbird_setup_key" {
   type      = string
   sensitive = true
+}
+
+variable "ssh_private_key_path" {
+  type = string
 }

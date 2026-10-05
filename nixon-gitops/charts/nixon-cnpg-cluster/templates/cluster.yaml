@@ -36,12 +36,6 @@ spec:
     enablePodAntiAffinity: true
     topologyKey: kubernetes.io/hostname
 
-{{- if .Values.postgresUserPassword }}
-  superuserSecret: 
-    name: {{ include "nixon-cnpg-cluster.postgresPasswordSecret" . }}
-  enableSuperuserAccess: true
-{{- end  }}
-
   managed:
     services:
       disabledDefaultServices: ['ro', 'r']

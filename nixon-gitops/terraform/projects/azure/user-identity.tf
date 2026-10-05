@@ -1,6 +1,6 @@
 module "user_assigned_identity" {
   for_each              = { for identity in var.user_identities : identity.name => identity }
-  source                = "../../modules/azure_user_identity"
+  source                = "git::https://github.com/joshua-nixon/terraform-modules.git//azure_user_identity?ref=main"
   name                  = each.value.name
   resource_group_name   = each.value.resource_group_name
   federated_credentials = each.value.federated_credentials

@@ -22,7 +22,7 @@ repositories:
 
 helmDefaults:
   historyMax: 1
-  kubeContext: default
+  kubeContext: k3s-hetzner
 
 releases:
 
@@ -57,7 +57,7 @@ releases:
   - name: external-secrets
     namespace: external-secrets
     chart: external-secrets/external-secrets
-    version: 2.10.0
+    version: 2.11.0
     values:
       - values/external-secrets.yaml
     needs:
@@ -95,9 +95,10 @@ releases:
   ###############
 
   - name: kube-prometheus-stack
+    installed: true
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
-    version: 88.5.4
+    version: 91.8.2
     hooks:
       - events: ["postsync"]
         showlogs: true
@@ -155,6 +156,8 @@ releases:
     namespace: kube-system
     chart: hcloud/hcloud-cloud-controller-manager
     version: 1.37.0
+    needs:
+      - external-secrets/external-secrets
     hooks:
       - events: ["postsync"]
         showlogs: true
@@ -166,10 +169,14 @@ releases:
       - values/hcloud-ccm.yaml
 
   - name: hcloud-csi
-    installed: false
+    installed: true
     namespace: kube-system
     chart: hcloud/hcloud-csi
     version: 2.22.0
+    needs:
+      - kube-system/hcloud-ccm
+    values:
+      - values/hcloud-csi.yaml
 
   ########
   # KEDA #
@@ -203,7 +210,7 @@ releases:
   - name: traefik
     namespace: traefik
     chart: traefik/traefik
-    version: 41.3.0
+    version: 41.6.1
     hooks:
       - events: ["postsync"]
         showlogs: true

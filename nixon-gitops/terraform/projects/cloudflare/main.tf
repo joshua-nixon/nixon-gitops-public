@@ -31,7 +31,7 @@ locals {
 
 module "cloudflare_zones" {
   for_each  = local.expanded_records
-  source    = "../../modules/cloudflare_zone"
+  source    = "git::https://github.com/joshua-nixon/terraform-modules.git//cloudflare_zone?ref=main"
   zone_id   = each.value.id
   records   = each.value.records
   redirects = each.value.redirects

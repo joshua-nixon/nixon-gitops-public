@@ -8,7 +8,6 @@ applicationSets:
       - /configuration/tier9/values.yaml
       - /configuration/tier9/{{ .environment }}/{{ .name }}.yaml
     applications:
-      - name: tier9-abo-api
       - name: tier9-abo-slime
       - name: tier9-abo-worldchat
       - name: tier9-postgresql

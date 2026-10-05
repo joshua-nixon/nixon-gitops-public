@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu26.04
+FROM mcr.microsoft.com/devcontainers/base:ubuntu24.04
 
 USER root
 
@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
   tar \
   unzip \
   ca-certificates \
+  docker.io \
   software-properties-common \
   gnupg \
   dos2unix \
@@ -53,6 +54,11 @@ RUN KUBECTL_VER=$(curl -fsSL https://dl.k8s.io/release/stable.txt) \
 RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 #####
+## K3sup
+
+RUN curl -sLS https://get.k3sup.dev | sh
+
+#####
 ##  CNPG
 
 RUN curl -sSfL "https://github.com/cloudnative-pg/cloudnative-pg/raw/main/hack/install-cnpg-plugin.sh" | sudo sh -s -- -b /usr/local/bin
@@ -73,11 +79,6 @@ RUN HELMFILE_VER=$(curl -s https://api.github.com/repos/helmfile/helmfile/releas
   && mv helmfile /usr/local/bin/ \
   && rm helmfile.tar.gz \
   && helm plugin install https://github.com/databus23/helm-diff
-
-#####
-## Ansible
-
-RUN apt-get install -y ansible ansible-lint
 
 #####
 ##  Cleanup
