@@ -9,7 +9,7 @@ metadata:
 spec:
   refreshInterval: 24h
   secretStoreRef:
-    name: cluster-secretstore
+    name: kvk3shared
     kind: ClusterSecretStore
   target:
     name: hcloud

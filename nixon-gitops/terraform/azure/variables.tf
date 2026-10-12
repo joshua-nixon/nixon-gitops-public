@@ -1,8 +1,6 @@
 
 variable "resource_groups" {
-  type = list(object({
-    name = string
-  }))
+  type = list(string)
 }
 
 variable "subscription_id" {
@@ -74,15 +72,6 @@ variable "applications" {
     })), [])
   }))
   default = []
-}
-
-variable "user_groups" {
-  type = map(object({
-    member_emails = list(string)
-    display_name  = optional(string)
-    mail_nickname = optional(string)
-  }))
-  default = {}
 }
 
 variable "user_identities" {

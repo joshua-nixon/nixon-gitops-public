@@ -1,5 +1,5 @@
 SOURCE_VAULT="k3sclustersharedvault"
-DEST_VAULT="tier9privatekeyvault"
+DEST_VAULT="kvk3shared"
 
 for secret in $(az keyvault secret list --vault-name $SOURCE_VAULT --query "[].name" -o tsv); do
     value=$(az keyvault secret show --vault-name $SOURCE_VAULT --name $secret --query "value" -o tsv)

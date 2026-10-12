@@ -1,6 +1,6 @@
 repositorySecret:
   name: gitops-repository-credential
-  vaultName: cluster-secretstore
+  vaultName: kvk3shared
 
 ingress:
   host: argocd.joshuanixon.dev

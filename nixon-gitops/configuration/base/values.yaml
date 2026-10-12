@@ -4,7 +4,7 @@ clusterIssuer: selfsigned-clusterissuer
 
 secretStore:
   refreshInterval: 24h
-  name: cluster-secretstore
+  name: kvk3shared
 
 netbirdNetworkRoute:
   name: default-cluster-router
