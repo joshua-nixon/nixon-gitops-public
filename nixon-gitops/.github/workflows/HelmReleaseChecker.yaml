@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - source/helm-release-checker/**
+      - tools/helm-release-checker/**
   workflow_dispatch:
 
 permissions:
@@ -21,8 +21,8 @@ jobs:
       azure-subscription-id: ${{ vars.AZURE_SUB_ID }}
       image-registry: ${{ vars.AZURE_REGISTRY }}
       image-repository: helm-release-checker
-      dockerfile-path: ./source/helm-release-checker/Dockerfile
-      build-context: ./source/helm-release-checker
+      dockerfile-path: ./tools/helm-release-checker/Dockerfile
+      build-context: ./tools/helm-release-checker
     secrets: inherit
 
   deploy:

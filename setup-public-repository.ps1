@@ -11,13 +11,13 @@ function Get-GitRepository {
     git clone "https://github.com/joshua-nixon/nixon-gitops.git" $tempDir
 }
 
-function Remove-ImageRegistry {
-    $registryPattern = '(?<![A-Za-z0-9-])[A-Za-z0-9-]+\.azurecr\.io(?![A-Za-z0-9.-])'
+function Update-RegexString([string]$regex, [string]$replacement) {
+    $registryPattern = $regex
 
     Get-ChildItem -Path $tempDir -File -Recurse -Force |
         ForEach-Object {
             $content            = [System.IO.File]::ReadAllText($_.FullName)
-            $anonymizedContent  = $content -replace $registryPattern, 'containerregistry.azurecr.io'
+            $anonymizedContent  = $content -replace $registryPattern, $replacement
 
             if ($anonymizedContent -cne $content) {
                 [System.IO.File]::WriteAllText($_.FullName, $anonymizedContent)
@@ -32,7 +32,17 @@ function Clear-DestinationRepository {
 
 Get-GitRepository
 
-Remove-ImageRegistry
+Update-RegexString `
+    -regex '(?<![A-Za-z0-9-])[A-Za-z0-9-]+\.azurecr\.io(?![A-Za-z0-9.-])' `
+    -replacement 'containerregistry.azurecr.io'
+
+Update-RegexString `
+    -regex '(?<![A-Za-z0-9-])[A-Za-z0-9-]+\.vault\.azure\.net(?![A-Za-z0-9.-])' `
+    -replacement 'keyvault.azure.net'
+
+Update-RegexString `
+    -regex '(?<![A-Za-z0-9-])[A-Za-z0-9-]+\.blob\.core\.windows\.net(?![A-Za-z0-9.-])' `
+    -replacement 'storageaccount.blob.core.windows.net'
 
 Clear-DestinationRepository
 

@@ -1,9 +1,9 @@
 
 ### GIT ###
 
-nixon-gitops/.gitattributes
-nixon-gitops/.gitignore
-nixon-gitops/.git
+nixon-gitops/**/.gitattributes
+nixon-gitops/**/.gitignore
+nixon-gitops/**/.git
 
 ### CONFIGURATION ###
 
@@ -11,16 +11,14 @@ nixon-gitops/.git
 **/helm/values/traefik.yaml
 **/helm/values/kube-prometheus-stack.yaml
 
-nixon-gitops/configuration/**/*-postgresql.yaml
-
-nixon-gitops/charts/nixon-external-secrets-resources/values.yaml
-
 ### SCRIPTS ###
 
-**/scripts/**/k3s-hetzner.sh
+**/tools/**/k3s-hetzner.sh
 
 ### TERRAFORM ###
 
-**/setup-backend.sh
 **/vars.auto.tfvars
-**/.terraform.lock.hcl
+
+### WORKSTATIONS ###
+
+**/workstations/

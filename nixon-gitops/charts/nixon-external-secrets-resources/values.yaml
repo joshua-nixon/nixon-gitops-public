@@ -1,0 +1,10 @@
+clusterSecretStores:
+  - name: kvtier9production
+    vaultUrl: https://keyvault.azure.net/
+
+  - name: kvk3shared
+    vaultUrl: https://keyvault.azure.net/
+
+secretStore:
+  tenantId: 8bb2f89c-9d14-4830-bbd8-7da44aa1256d
+  clientId: 0cbebb7a-8495-42b1-a8bc-02afa1ac21a4

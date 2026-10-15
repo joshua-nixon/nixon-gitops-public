@@ -1,0 +1,27 @@
+nameOverride: tier9-postgresql-production
+
+azureClientId: 0944db8b-f8c1-4eb7-8e4f-80c2d4712d76
+
+cluster:
+  instances: 1
+  databaseName: abo
+  image:
+    tag: "18"
+
+databaseRoles:
+  - name: admin_user
+    passwordRemoteRefKey: ABO-PG-USER-POSTGRES
+  - name: web_user
+    passwordRemoteRefKey: ABO-PG-USER-WEB
+
+objectStore:
+  enabled: true
+  destinationPath: https://storageaccount.blob.core.windows.net/pg-backups-3
+
+externalObjectStore:
+  enabled: true
+  serverName: tier9-postgresql-production
+  destinationPath: https://storageaccount.blob.core.windows.net/pg-backups-3
+
+storage:
+  storageClass: hcloud-volumes
