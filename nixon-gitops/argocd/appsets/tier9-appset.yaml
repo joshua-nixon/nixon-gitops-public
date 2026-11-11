@@ -23,7 +23,7 @@ spec:
     metadata:
       name: "{{ .name }}-{{ .environment }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/tier9-workload.yaml;/configuration/base/values.yaml;/configuration/tier9/values.yaml;/configuration/tier9/{{ .environment }}/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-deployable;/charts/nixon-library;/charts/nixon-cnpg-cluster;/argocd/workloads/tier9-workload.yaml;/configuration/base/values.yaml;/configuration/environments/{{ .environment }}/tier9/values.yaml;/configuration/environments/{{ .environment }}/tier9/{{ .name }}.yaml"
     spec:
       project: default
       source:
@@ -33,7 +33,7 @@ spec:
         helm:
           releaseName: "{{ .name }}-{{ .environment }}"
           ignoreMissingValueFiles: true
-          valueFiles: ["/configuration/base/values.yaml", "/configuration/tier9/values.yaml", "/configuration/tier9/{{ .environment }}/{{ .name }}.yaml"]
+          valueFiles: ["/configuration/base/values.yaml", "/configuration/environments/{{ .environment }}/tier9/values.yaml", "/configuration/environments/{{ .environment }}/tier9/{{ .name }}.yaml"]
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{ .namespace }}"

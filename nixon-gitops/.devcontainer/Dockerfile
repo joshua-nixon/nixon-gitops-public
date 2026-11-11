@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y \
   tar \
   unzip \
   ca-certificates \
-  docker.io \
   software-properties-common \
   gnupg \
   dos2unix \

@@ -32,8 +32,8 @@ app.kubernetes.io/name: {{ include "nixon-cnpg-cluster.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{- define "nixon-cnpg-cluster.externalObjectStore" -}}
-{{- printf "%s-external-store" (include "nixon-cnpg-cluster.name" .) | trim -}}
+{{- define "nixon-cnpg-cluster.recoveryObjectStore" -}}
+{{- printf "%s-recovery-store" (include "nixon-cnpg-cluster.name" .) | trim -}}
 {{- end }}
 
 {{- define "nixon-cnpg-cluster.userResourceName" -}}

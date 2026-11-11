@@ -57,7 +57,7 @@ releases:
   - name: external-secrets
     namespace: external-secrets
     chart: external-secrets/external-secrets
-    version: 2.11.0
+    version: 2.13.0
     values:
       - values/external-secrets.yaml
     needs:
@@ -76,7 +76,7 @@ releases:
   - name: argocd
     namespace: argocd
     chart: argo/argo-cd
-    version: 10.9.0
+    version: 10.10.5
     values:
       - values/argocd.yaml
 
@@ -98,7 +98,7 @@ releases:
     installed: true
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
-    version: 91.8.2
+    version: 92.10.1
     hooks:
       - events: ["postsync"]
         showlogs: true
@@ -147,7 +147,6 @@ releases:
       - cnpg-system/cnpg
       - cert-manager/cert-manager
 
-
   ###########
   # HETZNER #
   ###########
@@ -155,7 +154,7 @@ releases:
   - name: hcloud-ccm
     namespace: kube-system
     chart: hcloud/hcloud-cloud-controller-manager
-    version: 1.37.0
+    version: 1.39.0
     needs:
       - external-secrets/external-secrets
     hooks:
@@ -210,7 +209,7 @@ releases:
   - name: traefik
     namespace: traefik
     chart: traefik/traefik
-    version: 41.6.1
+    version: 42.0.0
     hooks:
       - events: ["postsync"]
         showlogs: true

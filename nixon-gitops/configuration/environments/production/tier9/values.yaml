@@ -1,4 +1,2 @@
 secretStore:
   name: kvtier9production
-
-dotNetEnvironment: Production

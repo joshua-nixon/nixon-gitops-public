@@ -85,3 +85,9 @@ module "azure_application" {
   redirect_url            = each.value.redirect_url
   group_membership_claims = each.value.group_membership_claims
 }
+
+resource "azuread_group" "admin_group" {
+  display_name     = "grp-admins"
+  security_enabled = true
+  members          = [data.azuread_user.current_user.object_id]
+}

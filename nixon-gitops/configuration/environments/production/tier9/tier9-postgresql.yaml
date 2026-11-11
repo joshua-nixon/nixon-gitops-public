@@ -1,6 +1,8 @@
 nameOverride: tier9-postgresql-production
 
-azureClientId: 0944db8b-f8c1-4eb7-8e4f-80c2d4712d76
+azureWorkloadIdentity:
+  enabled: true
+  clientId: 0944db8b-f8c1-4eb7-8e4f-80c2d4712d76
 
 cluster:
   instances: 1
@@ -16,12 +18,12 @@ databaseRoles:
 
 objectStore:
   enabled: true
-  destinationPath: https://storageaccount.blob.core.windows.net/pg-backups-3
+  destinationPath: https://storageaccount.blob.core.windows.net/pg-backups
 
-externalObjectStore:
+recoveryObjectStore:
   enabled: true
   serverName: tier9-postgresql-production
-  destinationPath: https://storageaccount.blob.core.windows.net/pg-backups-3
+  destinationPath: https://storageaccount.blob.core.windows.net/pg-backups
 
 storage:
   storageClass: hcloud-volumes

@@ -9,28 +9,30 @@ spec:
   instances: {{ .Values.cluster.instances }}
   imageName: ghcr.io/cloudnative-pg/postgresql:{{ .Values.cluster.image.tag }}
 
+{{- if .Values.azureWorkloadIdentity.enabled }}
   inheritedMetadata:
-    labels: 
-      azure.workload.identity/use: 'true'
+    labels:
+      azure.workload.identity/use: "true"
 
   serviceAccountTemplate:
     metadata:
       annotations:
-        azure.workload.identity/client-id: {{ .Values.azureClientId | quote }}
+        azure.workload.identity/client-id: {{ .Values.azureWorkloadIdentity.clientId | quote }}
       labels:
         azure.workload.identity/use: "true"
+{{- end }}
 
   bootstrap:
-  {{ if eq .Values.bootstrap.mode "initdb" }}
+{{- if .Values.recoveryObjectStore.enabled }}
+    recovery:
+      source: recovery-cluster
+      database: {{ .Values.cluster.databaseName }}
+      owner: postgres
+{{- else }}
     initdb:
       database: {{ .Values.cluster.databaseName }}
       owner: postgres
-  {{ else }}
-    recovery:
-      source: external-cluster
-      database: {{ .Values.cluster.databaseName }}
-      owner: postgres
-  {{ end }}
+{{- end }}
 
   affinity:
     enablePodAntiAffinity: true
@@ -40,15 +42,15 @@ spec:
     services:
       disabledDefaultServices: ['ro', 'r']
 
-  {{ if ne .Values.bootstrap.mode "initdb" }}
+{{- if .Values.recoveryObjectStore.enabled }}
   externalClusters:
-    - name: external-cluster
+    - name: recovery-cluster
       plugin:
         name: barman-cloud.cloudnative-pg.io
         parameters:
-          barmanObjectName: {{ include "nixon-cnpg-cluster.externalObjectStore" . }}
-          serverName: {{ .Values.externalObjectStore.serverName }}
-  {{ end }}
+          barmanObjectName: {{ include "nixon-cnpg-cluster.recoveryObjectStore" . }}
+          serverName: {{ .Values.recoveryObjectStore.serverName }}
+{{- end }}
 
   postgresql:     
     parameters:
@@ -64,7 +66,7 @@ spec:
       {{ $key }}: {{ $value | quote }}
 {{- end }}
     
-{{ if .Values.objectStore.enabled }}
+{{- if .Values.objectStore.enabled }}
   plugins:       
     - name: barman-cloud.cloudnative-pg.io
       enabled: true

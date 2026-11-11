@@ -1,0 +1,19 @@
+{{- if .Values.recoveryObjectStore.destinationPath }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ include "nixon-cnpg-cluster.recoveryObjectStore" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "nixon-cnpg-cluster.labels" . | indent 4 }}
+spec:
+  retentionPolicy: 7d
+  configuration:
+    data:
+      compression: bzip2
+    wal:
+      compression: bzip2
+    destinationPath: {{ .Values.recoveryObjectStore.destinationPath | quote }}
+    azureCredentials:
+      inheritFromAzureAD: true
+{{- end }}

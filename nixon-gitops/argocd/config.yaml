@@ -5,8 +5,8 @@ applicationSets:
       - production
     valueFiles:
       - /configuration/base/values.yaml
-      - /configuration/tier9/values.yaml
-      - /configuration/tier9/{{ .environment }}/{{ .name }}.yaml
+      - /configuration/environments/{{ .environment }}/tier9/values.yaml
+      - /configuration/environments/{{ .environment }}/tier9/{{ .name }}.yaml
     applications:
       - name: tier9-abo-slime
       - name: tier9-abo-worldchat
@@ -19,7 +19,7 @@ applicationSets:
       - production
     valueFiles:
       - /configuration/base/values.yaml
-      - /configuration/hedgehogscorner/{{ .environment }}/{{ .name }}.yaml
+      - /configuration/environments/{{ .environment }}/hedgehogscorner/{{ .name }}.yaml
     applications:
       - name: hedgehogscorner-website
 

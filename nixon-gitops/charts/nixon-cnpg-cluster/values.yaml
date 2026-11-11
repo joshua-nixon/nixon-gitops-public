@@ -1,12 +1,14 @@
-bootstrap:
-  mode: recovery
+azureWorkloadIdentity:
+  enabled: false
+  clientId: ""
 
 objectStore:
   enabled: false
   destinationPath: ""
 
-externalObjectStore:
+recoveryObjectStore:
   enabled: false
+  serverName: ""
   destinationPath: ""
 
 databaseRoles: []
